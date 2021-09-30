@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "922759644731",
+    "project_id": "coolname-51ba0",
+    "storage_bucket": "coolname-51ba0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922759644731:android:cfc2692d9904cb1d32be1e",
+        "android_client_info": {
+          "package_name": "com.example.coolname"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "922759644731-pvdqelc7memjjl9j0q3h1p9rchqvi3s4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD99uNQIGW1JZYntB8PVoP7uRCCGkqicpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "922759644731-pvdqelc7memjjl9j0q3h1p9rchqvi3s4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
