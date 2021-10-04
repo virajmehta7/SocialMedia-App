@@ -1,7 +1,6 @@
 import 'package:coolname/utils/outlineInputBorder.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'forgotPassword.dart';
 
 class ChangePassword extends StatefulWidget {
@@ -75,7 +74,6 @@ class _ChangePasswordState extends State<ChangePassword> {
                     email: FirebaseAuth.instance.currentUser.email,
                     password: password.text,
                   );
-
                   await FirebaseAuth.instance.currentUser.updatePassword(newPassword.text)
                       .then((_){
                     showDialog(

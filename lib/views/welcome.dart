@@ -10,7 +10,6 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +36,7 @@ class _WelcomeState extends State<Welcome> {
                 padding: EdgeInsets.fromLTRB(35, 0, 35, 5),
                 child: Text('Let\'s Get \nStarted',
                   style: TextStyle(
-                    fontSize: 48,
+                    fontSize: 45,
                     color: Colors.white,
                     letterSpacing: 0.5,
                   ),

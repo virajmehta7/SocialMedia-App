@@ -207,30 +207,22 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       ),
                       onPressed: () async {
-
                         FocusScope.of(context).unfocus();
-
                         if(_formKey.currentState.validate()) {
-
                           setState(() {
                             loading = true;
                           });
-
                           try{
-
                             await FirebaseAuth.instance.signInWithEmailAndPassword(
                                 email: emailTextEditingController.text.trim(),
                                 password: passwordTextEditingController.text.trim()
                             );
-
                             final SharedPreferences prefs = await SharedPreferences.getInstance();
                             prefs.setString('email', emailTextEditingController.text.trim());
-
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(builder: (context) => Home()),
                                     (Route<dynamic> route) => false
                             );
-
                           } catch(e){
                             setState(() {
                               error = e.message;

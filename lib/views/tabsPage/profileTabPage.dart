@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coolname/views/bottomSheet/addPost.dart';
 import 'package:coolname/views/bottomSheet/more.dart';

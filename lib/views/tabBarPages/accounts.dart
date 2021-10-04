@@ -35,7 +35,6 @@ class _SearchAccountsState extends State<SearchAccounts> {
                   suffixIcon: IconButton(
                     onPressed: (){
                       FocusScope.of(context).unfocus();
-
                       FirebaseFirestore.instance
                           .collection('users')
                           .where('username', isGreaterThanOrEqualTo: search.text.trim().toLowerCase())

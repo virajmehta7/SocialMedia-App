@@ -93,26 +93,16 @@ class _PostDetailsState extends State<PostDetails> {
                     IconButton(
                       padding: EdgeInsets.fromLTRB(5,15,20,0),
                       onPressed: () async {
-
                         setState(() {
                           loading = true;
                         });
-
                         try{
-
                           Navigator.pop(context);
-
                           await FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
                             myTransaction.delete(snapshot.data.reference);
                           });
-
                           if(snapshot.data['tags'].toString().isNotEmpty){
                             snapshot.data['tags'].forEach((e) async {
-                              // await FirebaseFirestore.instance
-                              //     .collection(e.toString().substring(1))
-                              //     .doc(widget.doc)
-                              //     .delete();
-                              
                               await FirebaseFirestore.instance
                                   .collection('AllTags')
                                   .doc(e.toString().substring(1))
@@ -121,18 +111,15 @@ class _PostDetailsState extends State<PostDetails> {
                                   .delete();
                             });
                           }
-
                           await FirebaseFirestore.instance
                               .collection('AllPosts')
                               .doc(widget.doc)
                               .delete();
-
                         } catch(e) {
                           setState(() {
                             loading = false;
                           });
                         }
-
                       },
                       icon: Icon(Icons.delete),
                     ),

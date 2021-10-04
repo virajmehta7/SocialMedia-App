@@ -226,25 +226,18 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       ),
                       onPressed: () async {
-
                         FocusScope.of(context).unfocus();
-
-                        final validUsername = await databaseMethods.usernameCheck(usernameTextEditingController.text);
-
+                        final validUsername = await databaseMethods.usernameCheck(usernameTextEditingController.text.trim());
                         if (!validUsername) {
                           setState(() {
-                            error = 'The username ${usernameTextEditingController.text} is not available.';
+                            error = 'The username ${usernameTextEditingController.text.trim()} is not available.';
                           });
                         }
-
                         else if(_formKey.currentState.validate()){
-
                           setState(() {
                             loading = true;
                           });
-
                           try {
-
                             await FirebaseAuth.instance.createUserWithEmailAndPassword(
                                 email: emailTextEditingController.text.trim(),
                                 password: passwordTextEditingController.text.trim()
@@ -259,26 +252,20 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
                                   "profilePhoto" : null,
                                   "profileBgPhoto" : null
                                 };
-
                                 await FirebaseFirestore.instance.collection("users")
                                     .doc(userInfoMap['uid'])
                                     .set(userInfoMap, SetOptions(merge: true));
-
                                 await value.user.updateDisplayName(
                                     usernameTextEditingController.text.trim()
                                 );
-
                                 final SharedPreferences prefs = await SharedPreferences.getInstance();
                                 prefs.setString('email', emailTextEditingController.text.trim());
-
                                 Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(builder: (context) => Home()),
                                         (Route<dynamic> route) => false
                                 );
-
                               }
                             });
-
                           } catch (e) {
                             setState(() {
                               error = e.message;

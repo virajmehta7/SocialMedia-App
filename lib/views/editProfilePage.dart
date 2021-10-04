@@ -72,7 +72,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
       nameTextEditingController.text = name;
       bioTextEditingController.text = bio;
     });
-
   }
 
   @override
@@ -110,21 +109,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
               color: Color(0xffb1325f),
             ),
             onPressed: () async {
-
               setState(() {
                 loading = true;
               });
-
               if(profilePic != null){
-
                 Reference ref = FirebaseStorage.instance
                     .ref()
                     .child('profilePhoto')
                     .child(username)
                     .child(username+'-${DateTime.now().toString()}');
-
                 UploadTask task = ref.putFile(profilePic);
-
                 task.whenComplete(() async {
                   url1 = await ref.getDownloadURL();
                   await FirebaseFirestore.instance
@@ -138,19 +132,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     loading = false;
                   });
                 });
-
               }
-
               if(profileBgPic != null){
-
                 Reference ref = FirebaseStorage.instance
                     .ref()
                     .child('profileBgPhoto')
                     .child(username)
                     .child(username+'-${DateTime.now().toString()}');
-
                 UploadTask task = ref.putFile(profileBgPic);
-
                 task.whenComplete(() async {
                   url2 = await ref.getDownloadURL();
                   await FirebaseFirestore.instance
@@ -164,9 +153,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     loading = false;
                   });
                 });
-
               }
-
               if(profileBgPic == null && profileBgPhoto == null){
                 await FirebaseFirestore.instance
                     .collection('users')
@@ -175,7 +162,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   'profileBgPhoto' : null
                 });
               }
-
               if(profilePic == null && profilePhoto == null){
                 await FirebaseFirestore.instance
                     .collection('users')
@@ -184,7 +170,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   'profilePhoto' : null
                 });
               }
-
               await FirebaseFirestore.instance
                   .collection('users')
                   .doc(FirebaseAuth.instance.currentUser.uid)
@@ -192,10 +177,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 'bio' : bioTextEditingController.text.trim(),
                 'name' : nameTextEditingController.text.trim(),
               });
-
               Navigator.pop(context);
               Navigator.pop(context);
-
             },
           ),
         ],

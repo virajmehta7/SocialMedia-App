@@ -70,28 +70,22 @@ class _UploadPostState extends State<UploadPost> {
               color: Color(0xffb1325f),
             ),
             onPressed: (){
-
               setState(() {
                 loading = true;
               });
-
               Reference ref = FirebaseStorage.instance
                   .ref()
                   .child('posts')
                   .child(username)
                   .child(username+'-${DateTime.now().toString()}');
-
               UploadTask task = ref.putFile(widget.post);
-
               task.whenComplete(() async {
                 url = await ref.getDownloadURL();
-
                 var doc = FirebaseFirestore.instance
                     .collection('users')
                     .doc(FirebaseAuth.instance.currentUser.uid)
                     .collection('posts')
                     .doc();
-
                 await doc.set({
                   'username': username,
                   'photo': url,
@@ -107,40 +101,17 @@ class _UploadPostState extends State<UploadPost> {
                     })
                   }
                 });
-
                 if(tags.isNotEmpty){
                   tags.forEach((element) async {
-
-                    // await FirebaseFirestore.instance
-                    //     .collection(element.substring(1))
-                    //     .doc(doc.id)
-                    //     .set({
-                    //   'username': username,
-                    //   'photo': url,
-                    //   'caption': captionTextEditingController.text.trim(),
-                    //   'doc': doc.id,
-                    //   'postedAt': Timestamp.now(),
-                    //   'tags': FieldValue.arrayUnion(tagsList)
-                    // });
-
-                    // await FirebaseFirestore.instance
-                    //     .collection('AllTags')
-                    //     .doc('allTags')
-                    //     .set({
-                    //   'tags' : FieldValue.arrayUnion(tagsList)
-                    // }, SetOptions(merge: true));
-
                     var doc1 = FirebaseFirestore.instance
                         .collection('AllTags')
                         .doc(element.substring(1));
-
                         doc1.set(
                         {
                           'tag' : element.substring(1)
                         },
                         SetOptions(merge: true)
                         );
-
                     doc1.collection(element.substring(1))
                         .doc(doc.id)
                         .set({
@@ -152,10 +123,8 @@ class _UploadPostState extends State<UploadPost> {
                       'postedAt': Timestamp.now(),
                       'tags': FieldValue.arrayUnion(tagsList)
                     });
-
                   });
                 }
-
                 await FirebaseFirestore.instance
                     .collection('AllPosts')
                     .doc(doc.id)
@@ -168,16 +137,13 @@ class _UploadPostState extends State<UploadPost> {
                   'postedAt': Timestamp.now(),
                   'tags': FieldValue.arrayUnion(tagsList),
                 });
-
                 Navigator.pop(context);
                 Navigator.pop(context);
-
               }).catchError((e){
                 setState(() {
                   loading = false;
                 });
               });
-
             },
           ),
         ],
