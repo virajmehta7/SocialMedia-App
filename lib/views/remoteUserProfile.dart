@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -37,12 +38,27 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
                   ),
                 ),
               ),
+              // ClipRRect(
+              //   borderRadius: BorderRadius.only(
+              //       bottomLeft: Radius.circular(20),
+              //       bottomRight: Radius.circular(20)
+              //   ),
+              //   child: Image.network(photo),
+              // ),
               ClipRRect(
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20)
                 ),
-                child: Image.network(photo),
+                child: CachedNetworkImage(
+                  imageUrl: photo,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                        value: downloadProgress.progress,
+                        color: Color(0xffb1325f),
+                      ),
+                  errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                ),
               ),
             ],
           ),
@@ -90,11 +106,17 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           height: 150,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: NetworkImage(snapshot.data['profileBgPhoto']),
-                                  fit: BoxFit.fitWidth
-                              )
+                          // decoration: BoxDecoration(
+                          //     image: DecorationImage(
+                          //         image: NetworkImage(snapshot.data['profileBgPhoto']),
+                          //         fit: BoxFit.fitWidth
+                          //     )
+                          // ),
+                          child: CachedNetworkImage(
+                            imageUrl: snapshot.data['profileBgPhoto'],
+                            // progressIndicatorBuilder: (context, url, downloadProgress) => Container(),
+                            errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                            fit: BoxFit.fitWidth,
                           ),
                         ) :
                         Container(
@@ -105,13 +127,36 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
                         snapshot.data['profilePhoto'] != null ?
                         Container(
                           margin: EdgeInsets.only(top: 80, bottom: 5),
-                          child: Center(
-                            child: CircleAvatar(
-                              radius: 60,
-                              backgroundColor: Colors.white,
-                              backgroundImage: NetworkImage(snapshot.data['profilePhoto']),
-                            ),
-                          ),
+                          child: CachedNetworkImage(
+                            imageUrl: snapshot.data['profilePhoto'],
+                            // progressIndicatorBuilder: (context, url, downloadProgress) =>
+                            //     Center(
+                            //       child: CircularProgressIndicator(
+                            //         value: downloadProgress.progress,
+                            //         color: Color(0xffb1325f),
+                            //       ),
+                            //     ),
+                            imageBuilder: (context, imageProvider) =>
+                                Center(
+                                  child: CircleAvatar(
+                                    radius: 60,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                          )
+                          // Center(
+                          //   child: CircleAvatar(
+                          //     radius: 60,
+                          //     backgroundColor: Colors.white,
+                          //     backgroundImage: NetworkImage(snapshot.data['profilePhoto']),
+                          //   ),
+                          // ),
                         ) :
                         Container(
                           margin: EdgeInsets.only(top: 80, bottom: 8),
@@ -224,10 +269,22 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // ClipRRect(
+                            //   borderRadius: BorderRadius.circular(20),
+                            //   child: Image(
+                            //     image: NetworkImage(snapshot.data.docs[index]['photo']),
+                            //   ),
+                            // ),
                             ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image(
-                                image: NetworkImage(snapshot.data.docs[index]['photo']),
+                              child: CachedNetworkImage(
+                                imageUrl: snapshot.data.docs[index]['photo'],
+                                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                                    CircularProgressIndicator(
+                                      value: downloadProgress.progress,
+                                      color: Color(0xffb1325f),
+                                    ),
+                                errorWidget: (context, url, error) => Icon(Icons.error_outline),
                               ),
                             ),
                             snapshot.data.docs[index]['caption'].toString().isNotEmpty ?

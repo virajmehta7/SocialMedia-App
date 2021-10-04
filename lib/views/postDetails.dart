@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -62,12 +63,26 @@ class _PostDetailsState extends State<PostDetails> {
                     widget.profilePhoto != null ?
                     Padding(
                       padding: EdgeInsets.fromLTRB(20,15,5,0),
-                      child: CircleAvatar(
-                        radius: 22,
-                        backgroundImage: NetworkImage(
-                            widget.profilePhoto
-                        ),
-                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.profilePhoto,
+                        imageBuilder: (context, imageProvider) =>
+                            CircleAvatar(
+                              radius: 22,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                                ),
+                              ),
+                            ),
+                        errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                      )
+                      // CircleAvatar(
+                      //   radius: 22,
+                      //   backgroundImage: NetworkImage(
+                      //       widget.profilePhoto
+                      //   ),
+                      // ),
                     ) :
                     Padding(
                       padding: EdgeInsets.fromLTRB(20,15,5,0),
@@ -142,11 +157,20 @@ class _PostDetailsState extends State<PostDetails> {
                         )
                       ]
                   ),
-                  child: Image(
-                    image: NetworkImage(
-                        snapshot.data['photo']
-                    ),
-                  ),
+                  child: CachedNetworkImage(
+                    imageUrl: snapshot.data['photo'],
+                    progressIndicatorBuilder: (context, url, downloadProgress) =>
+                        CircularProgressIndicator(
+                          value: downloadProgress.progress,
+                          color: Color(0xffb1325f),
+                        ),
+                    errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                  )
+                  // Image(
+                  //   image: NetworkImage(
+                  //       snapshot.data['photo']
+                  //   ),
+                  // ),
                 ),
                 Container(
                   alignment: Alignment.centerRight,

@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -37,12 +38,27 @@ class _TagState extends State<Tag> {
                   ),
                 ),
               ),
+              // ClipRRect(
+              //   borderRadius: BorderRadius.only(
+              //       bottomLeft: Radius.circular(20),
+              //       bottomRight: Radius.circular(20)
+              //   ),
+              //   child: Image.network(photo),
+              // ),
               ClipRRect(
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20)
                 ),
-                child: Image.network(photo),
+                child: CachedNetworkImage(
+                  imageUrl: photo,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                        value: downloadProgress.progress,
+                        color: Color(0xffb1325f),
+                      ),
+                  errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                ),
               ),
             ],
           ),
@@ -141,10 +157,22 @@ class _TagState extends State<Tag> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // ClipRRect(
+                          //   borderRadius: BorderRadius.circular(20),
+                          //   child: Image(
+                          //     image: NetworkImage(snapshot.data.docs[index]['photo']),
+                          //   ),
+                          // ),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(20),
-                            child: Image(
-                              image: NetworkImage(snapshot.data.docs[index]['photo']),
+                            child: CachedNetworkImage(
+                              imageUrl: snapshot.data.docs[index]['photo'],
+                              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                                  CircularProgressIndicator(
+                                    value: downloadProgress.progress,
+                                    color: Color(0xffb1325f),
+                                  ),
+                              errorWidget: (context, url, error) => Icon(Icons.error_outline),
                             ),
                           ),
                           Padding(
@@ -163,7 +191,7 @@ class _TagState extends State<Tag> {
                             padding: EdgeInsets.fromLTRB(8,0,8,5),
                             child: Text(snapshot.data.docs[index]['caption'],
                               style: TextStyle(
-                                color: Colors.black54,
+                                color: Colors.grey,
                                 fontSize: 16,
                               ),
                               maxLines: 3,
