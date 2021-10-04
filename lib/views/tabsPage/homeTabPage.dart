@@ -70,117 +70,125 @@ class _HomeTabPageState extends State<HomeTabPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Posts',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 22
-          ),
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),
-      body: SingleChildScrollView(
-        child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('AllPosts')
-              .orderBy("postedAt", descending: true)
-              .snapshots(),
-          builder: (context, snapshot){
-            if(!snapshot.hasData)
-              return Center(
-                  child: CircularProgressIndicator(
-                      color: Color(0xffb1325f)
-                  )
-              );
-            return StaggeredGridView.countBuilder(
-              crossAxisCount: 2,
-              mainAxisSpacing: 20,
-              crossAxisSpacing: 3,
-              padding: EdgeInsets.fromLTRB(3, 5, 3, 80),
-              itemCount: snapshot.data.docs.length,
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
-              staggeredTileBuilder: (_) => StaggeredTile.fit(1),
-              itemBuilder: (context, index){
-                return GestureDetector(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => RemoteUserPostDetail(
-                      photo: snapshot.data.docs[index]['photo'],
-                      time: snapshot.data.docs[index]['postedAt'],
-                      caption: snapshot.data.docs[index]['caption'],
-                      tag: snapshot.data.docs[index]['tags'],
-                      doc: snapshot.data.docs[index]['doc'],
-                      username: snapshot.data.docs[index]['username'],
-                      uid: snapshot.data.docs[index]['uid'],
-                    )));
-                  },
-                  onLongPress: (){
-                    popUp = createPopUp(
-                        snapshot.data.docs[index]['username'],
-                        snapshot.data.docs[index]['photo']
-                    );
-                    Overlay.of(context).insert(popUp);
-                  },
-                  onLongPressEnd: (_){
-                    popUp.remove();
-                  },
-                  behavior: HitTestBehavior.translucent,
-                  child: Card(
-                    color: Colors.transparent,
-                    elevation: 0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // ClipRRect(
-                        //   borderRadius: BorderRadius.circular(20),
-                        //   child: Image(
-                        //     image: NetworkImage(snapshot.data.docs[index]['photo']),
-                        //   ),
-                        // ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: CachedNetworkImage(
-                            imageUrl: snapshot.data.docs[index]['photo'],
-                            progressIndicatorBuilder: (context, url, downloadProgress) =>
-                              CircularProgressIndicator(
-                                value: downloadProgress.progress,
-                                color: Color(0xffb1325f),
-                              ),
-                            errorWidget: (context, url, error) => Icon(Icons.error_outline),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(8,5,8,0),
-                          child: Text(snapshot.data.docs[index]['username'],
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        snapshot.data.docs[index]['caption'].toString().isNotEmpty ?
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(8,0,8,5),
-                          child: Text(snapshot.data.docs[index]['caption'],
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 16,
-                            ),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ) : Container(),
-                      ],
-                    ),
+      body: SafeArea(
+        child: NestedScrollView(
+          headerSliverBuilder: (context, bool isScrolled) {
+            return [
+              SliverAppBar(
+                title: Text('Posts',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22
                   ),
+                ),
+                centerTitle: true,
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+              ),
+            ];
+          },
+          body: SingleChildScrollView(
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('AllPosts')
+                  .orderBy("postedAt", descending: true)
+                  .snapshots(),
+              builder: (context, snapshot){
+                if(!snapshot.hasData)
+                  return Center(
+                      child: CircularProgressIndicator(
+                          color: Color(0xffb1325f)
+                      )
+                  );
+                return StaggeredGridView.countBuilder(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 3,
+                  padding: EdgeInsets.fromLTRB(3, 5, 3, 80),
+                  itemCount: snapshot.data.docs.length,
+                  shrinkWrap: true,
+                  physics: ScrollPhysics(),
+                  staggeredTileBuilder: (_) => StaggeredTile.fit(1),
+                  itemBuilder: (context, index){
+                    return GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => RemoteUserPostDetail(
+                          photo: snapshot.data.docs[index]['photo'],
+                          time: snapshot.data.docs[index]['postedAt'],
+                          caption: snapshot.data.docs[index]['caption'],
+                          tag: snapshot.data.docs[index]['tags'],
+                          doc: snapshot.data.docs[index]['doc'],
+                          username: snapshot.data.docs[index]['username'],
+                          uid: snapshot.data.docs[index]['uid'],
+                        )));
+                      },
+                      onLongPress: (){
+                        popUp = createPopUp(
+                            snapshot.data.docs[index]['username'],
+                            snapshot.data.docs[index]['photo']
+                        );
+                        Overlay.of(context).insert(popUp);
+                      },
+                      onLongPressEnd: (_){
+                        popUp.remove();
+                      },
+                      behavior: HitTestBehavior.translucent,
+                      child: Card(
+                        color: Colors.transparent,
+                        elevation: 0,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // ClipRRect(
+                            //   borderRadius: BorderRadius.circular(20),
+                            //   child: Image(
+                            //     image: NetworkImage(snapshot.data.docs[index]['photo']),
+                            //   ),
+                            // ),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: CachedNetworkImage(
+                                imageUrl: snapshot.data.docs[index]['photo'],
+                                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                                  CircularProgressIndicator(
+                                    value: downloadProgress.progress,
+                                    color: Color(0xffb1325f),
+                                  ),
+                                errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(8,5,8,0),
+                              child: Text(snapshot.data.docs[index]['username'],
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            snapshot.data.docs[index]['caption'].toString().isNotEmpty ?
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(8,0,8,5),
+                              child: Text(snapshot.data.docs[index]['caption'],
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 16,
+                                ),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ) : Container(),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
-            );
-          },
+            ),
+          ),
         ),
       ),
     );
