@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coolname/views/bottomSheet/addPost.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../remoteUserPostDetails.dart';
@@ -24,7 +25,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
           child: SimpleDialog(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             backgroundColor: Colors.white,
-            insetPadding: EdgeInsets.symmetric(vertical: 30, horizontal: 25),
+            // insetPadding: EdgeInsets.symmetric(vertical: 30, horizontal: 25),
             contentPadding: EdgeInsets.zero,
             children: [
               Padding(
@@ -84,11 +85,28 @@ class _HomeTabPageState extends State<HomeTabPage> {
                 centerTitle: true,
                 elevation: 0,
                 backgroundColor: Colors.transparent,
+                actions: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.add,
+                      color: Colors.black,
+                      size: 25,
+                    ),
+                    onPressed: (){
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => AddPost(),
+                      );
+                    },
+                  ),
+                ],
               ),
             ];
           },
           body: SingleChildScrollView(
-            child: StreamBuilder(
+            child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('AllPosts')
                   .orderBy("postedAt", descending: true)

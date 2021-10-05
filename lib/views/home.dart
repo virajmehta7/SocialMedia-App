@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'tabsPage/chatsTabPage.dart';
 import 'tabsPage/homeTabPage.dart';
 import 'tabsPage/profileTabPage.dart';
 import 'tabsPage/searchTabPage.dart';
+import 'tabsPage/videosTabPage.dart';
 
 class Home extends StatefulWidget {
   const Home({Key key}) : super(key: key);
@@ -17,6 +19,8 @@ class _HomeState extends State<Home> {
   final tabs = [
     HomeTabPage(),
     SearchTabPage(),
+    VideosTabPage(),
+    ChatsTabPage(),
     ProfileTabPage()
   ];
 
@@ -29,7 +33,7 @@ class _HomeState extends State<Home> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 80),
+              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 60),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
                 gradient: LinearGradient(
@@ -58,7 +62,8 @@ class _HomeState extends State<Home> {
                 selectedIconTheme: IconThemeData(color: Colors.white),
                 items: [
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.home_filled),
+                    icon: Icon(Icons.home_outlined),
+                    activeIcon: Icon(Icons.home),
                     label: 'Home',
                   ),
                   BottomNavigationBarItem(
@@ -66,7 +71,18 @@ class _HomeState extends State<Home> {
                     label: 'Search',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
+                    icon: Icon(Icons.video_collection_outlined),
+                    activeIcon: Icon(Icons.video_collection),
+                    label: 'Watch',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.chat_bubble_outline),
+                    activeIcon: Icon(Icons.chat_bubble_outlined),
+                    label: 'Chats',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.person_outline),
+                    activeIcon: Icon(Icons.person),
                     label: 'Profile',
                   ),
                 ],

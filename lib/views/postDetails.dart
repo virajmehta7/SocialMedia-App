@@ -148,15 +148,15 @@ class _PostDetailsState extends State<PostDetails> {
                 ),
                 Container(
                   margin: EdgeInsets.fromLTRB(20,1,20,8),
-                  decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            offset: Offset(6,4),
-                            blurRadius: 5,
-                            color: Colors.grey
-                        )
-                      ]
-                  ),
+                  // decoration: BoxDecoration(
+                  //     boxShadow: [
+                  //       BoxShadow(
+                  //           offset: Offset(6,4),
+                  //           blurRadius: 5,
+                  //           color: Colors.grey
+                  //       )
+                  //     ]
+                  // ),
                   child: CachedNetworkImage(
                     imageUrl: snapshot.data['photo'],
                     progressIndicatorBuilder: (context, url, downloadProgress) =>

@@ -164,15 +164,15 @@ class _UploadPostState extends State<UploadPost> {
           children: [
             Container(
               margin: EdgeInsets.fromLTRB(30,30,30,20),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    offset: Offset(6,4),
-                    blurRadius: 3,
-                  )
-                ],
-              ),
+              // decoration: BoxDecoration(
+              //   boxShadow: [
+              //     BoxShadow(
+              //       color: Colors.grey,
+              //       offset: Offset(6,4),
+              //       blurRadius: 3,
+              //     )
+              //   ],
+              // ),
               child: Image(
                 image: FileImage(widget.post),
               ),
