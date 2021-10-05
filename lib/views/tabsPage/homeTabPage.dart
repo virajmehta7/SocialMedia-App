@@ -106,7 +106,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
             ];
           },
           body: SingleChildScrollView(
-            child: StreamBuilder<QuerySnapshot>(
+            child: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('AllPosts')
                   .orderBy("postedAt", descending: true)

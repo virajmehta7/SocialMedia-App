@@ -58,7 +58,7 @@ class _AddVideosState extends State<AddVideos> {
                     ],
                   ),
                   onTap: () async {
-                    final video = await ImagePicker().pickVideo(source: ImageSource.gallery);
+                    final video = await ImagePicker().pickVideo(source: ImageSource.gallery, maxDuration: Duration(seconds: 15));
                     if(video != null){
                       Navigator.push(context, MaterialPageRoute(builder: (context) => UploadVideo(video: File(video.path),)));
                     }
@@ -85,7 +85,7 @@ class _AddVideosState extends State<AddVideos> {
                     ],
                   ),
                   onTap: () async {
-                    final video = await ImagePicker().pickVideo(source: ImageSource.camera);
+                    final video = await ImagePicker().pickVideo(source: ImageSource.camera, maxDuration: Duration(seconds: 15));
                     if(video != null){
                       Navigator.push(context, MaterialPageRoute(builder: (context) => UploadVideo(video: File(video.path),)));
                     }
