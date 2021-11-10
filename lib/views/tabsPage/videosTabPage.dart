@@ -41,23 +41,23 @@ class _VideosTabPageState extends State<VideosTabPage> {
           ),
         ],
       ),
-      // body: SingleChildScrollView(
-      //   child: StreamBuilder(
-      //     stream: FirebaseFirestore.instance
-      //         .collection('AllVideos')
-      //         .orderBy("postedAt", descending: true)
-      //         .snapshots(),
-      //     builder: (context, snapshot){
-      //       if(!snapshot.hasData)
-      //         return Center(
-      //             child: CircularProgressIndicator(
-      //                 color: Color(0xffb1325f)
-      //             )
-      //         );
-      //       return Container();
-      //     },
-      //   ),
-      // ),
+      body: SingleChildScrollView(
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('AllVideos')
+              .orderBy("postedAt", descending: true)
+              .snapshots(),
+          builder: (context, snapshot){
+            if(!snapshot.hasData)
+              return Center(
+                  child: CircularProgressIndicator(
+                      color: Color(0xffb1325f)
+                  )
+              );
+            return Container();
+          },
+        ),
+      ),
     );
   }
 }

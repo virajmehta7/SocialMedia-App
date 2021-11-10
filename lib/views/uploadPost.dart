@@ -60,11 +60,6 @@ class _UploadPostState extends State<UploadPost> {
                 loading = true;
               });
 
-              // exp.allMatches(captionTextEditingController.text.trim())
-              //     .forEach((match) async {
-              //       await addTag(match.group(0).toString().trim());
-              //     });
-
               List splitTags = captionTextEditingController.text.trim().split(" ");
               for (var item in splitTags) {
                 if (item.startsWith("#")) {
