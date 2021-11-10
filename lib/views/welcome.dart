@@ -10,6 +10,9 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> {
+
+  // final googleSignIn = GoogleSignIn();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +39,7 @@ class _WelcomeState extends State<Welcome> {
                 padding: EdgeInsets.fromLTRB(35, 0, 35, 5),
                 child: Text('Let\'s Get \nStarted',
                   style: TextStyle(
-                    fontSize: 45,
+                    fontSize: 46,
                     color: Colors.white,
                     letterSpacing: 0.5,
                   ),
@@ -53,7 +56,7 @@ class _WelcomeState extends State<Welcome> {
                 ),
               ),
               Container(
-                height: 80,
+                height: 76,
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.all(10),
                 child: ElevatedButton(
@@ -80,7 +83,7 @@ class _WelcomeState extends State<Welcome> {
                 ),
               ),
               Container(
-                height: 80,
+                height: 76,
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.all(10),
                 child: ElevatedButton(
@@ -106,7 +109,78 @@ class _WelcomeState extends State<Welcome> {
                   },
                 ),
               ),
-              SizedBox(height: 20)
+              // Container(
+              //   height: 76,
+              //   width: MediaQuery.of(context).size.width,
+              //   padding: EdgeInsets.all(10),
+              //   child: ElevatedButton(
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         CircleAvatar(
+              //           radius: 15,
+              //           backgroundColor: Colors.transparent,
+              //           child: Image.asset('assets/images/google.png'),
+              //         ),
+              //         Padding(
+              //           padding: EdgeInsets.only(left: 8),
+              //           child: Text('Continue with Google',
+              //             style: TextStyle(
+              //                 fontSize: 18,
+              //                 fontWeight: FontWeight.w300
+              //             ),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //     style: ElevatedButton.styleFrom(
+              //       primary: Colors.black.withOpacity(0.1),
+              //       shadowColor: Colors.transparent,
+              //       elevation: 0,
+              //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              //     ),
+              //     onPressed: () async {
+              //       try {
+              //         final gUser = await googleSignIn.signIn();
+              //         final googleAuth = await gUser.authentication;
+              //         final credential = GoogleAuthProvider.credential(
+              //           idToken: googleAuth.idToken,
+              //           accessToken: googleAuth.accessToken,
+              //         );
+              //         await FirebaseAuth.instance.signInWithCredential(credential)
+              //             .then((value) async {
+              //               if (value.user != null) {
+              //                 Map<String, dynamic> userInfoMap = {
+              //                   "uid": FirebaseAuth.instance.currentUser.uid,
+              //                   "username" : gUser.email.split('@').first,
+              //                   "email" : gUser.email,
+              //                   "name" : gUser.displayName,
+              //                   "bio" : "",
+              //                   "profilePhoto" : null,
+              //                   "profileBgPhoto" : null
+              //                 };
+              //                 await FirebaseFirestore.instance.collection("users")
+              //                     .doc(userInfoMap['uid'])
+              //                     .set(userInfoMap, SetOptions(merge: true));
+              //                 await value.user.updateDisplayName(
+              //                     gUser.displayName
+              //                 );
+              //                 final SharedPreferences prefs = await SharedPreferences.getInstance();
+              //                 prefs.setString('email', gUser.email);
+              //                 Navigator.of(context).pushAndRemoveUntil(
+              //                     MaterialPageRoute(builder: (context) => Home()),
+              //                         (Route<dynamic> route) => false
+              //                 );
+              //               }
+              //             });
+              //       } catch (e) {
+              //         print(e);
+              //       }
+              //     },
+              //   ),
+              // ),
+              SizedBox(height: 15)
             ],
           ),
         ),

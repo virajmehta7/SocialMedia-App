@@ -14,34 +14,20 @@ class UploadPost extends StatefulWidget {
 class _UploadPostState extends State<UploadPost> {
 
   TextEditingController captionTextEditingController = TextEditingController();
-  TextEditingController tagsTextEditingController = TextEditingController();
 
   var tags = <String>{};
   var tagsList = <dynamic>[];
-
   String url;
   String username = FirebaseAuth.instance.currentUser.displayName;
   String uid = FirebaseAuth.instance.currentUser.uid;
-
+  // RegExp exp = RegExp(r"\B#\w\w+");
   bool loading = false;
 
-  addTag() {
-    if (tagsTextEditingController.text.trim() == null || tagsTextEditingController.text.trim() == '') {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-          'Invalid tag',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Color(0xffb1325f),
-        duration: Duration(seconds: 1),
-      ));
-      return;
-    }
+  addTag(String text) {
     setState(() {
-      tags.add("#"+tagsTextEditingController.text.trim().toLowerCase());
-      tagsList.add("#"+tagsTextEditingController.text.trim().toLowerCase());
+      tags.add(text.toLowerCase());
+      tagsList.add(text.toLowerCase());
     });
-    tagsTextEditingController.clear();
   }
 
   @override
@@ -73,11 +59,25 @@ class _UploadPostState extends State<UploadPost> {
               setState(() {
                 loading = true;
               });
+
+              // exp.allMatches(captionTextEditingController.text.trim())
+              //     .forEach((match) async {
+              //       await addTag(match.group(0).toString().trim());
+              //     });
+
+              List splitTags = captionTextEditingController.text.trim().split(" ");
+              for (var item in splitTags) {
+                if (item.startsWith("#")) {
+                  addTag(item);
+                  print(item);
+                }
+              }
+
               Reference ref = FirebaseStorage.instance
                   .ref()
                   .child('posts')
-                  .child(username)
-                  .child(username+'-${DateTime.now().toString()}');
+                  .child(uid)
+                  .child(uid+'-${DateTime.now().toString()}');
               UploadTask task = ref.putFile(widget.post);
               task.whenComplete(() async {
                 url = await ref.getDownloadURL();
@@ -164,15 +164,6 @@ class _UploadPostState extends State<UploadPost> {
           children: [
             Container(
               margin: EdgeInsets.fromLTRB(30,30,30,20),
-              // decoration: BoxDecoration(
-              //   boxShadow: [
-              //     BoxShadow(
-              //       color: Colors.grey,
-              //       offset: Offset(6,4),
-              //       blurRadius: 3,
-              //     )
-              //   ],
-              // ),
               child: Image(
                 image: FileImage(widget.post),
               ),
@@ -191,63 +182,6 @@ class _UploadPostState extends State<UploadPost> {
                       hintStyle: TextStyle(fontSize: 16)
                   ),
                 )
-            ),
-            Padding(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                child: TextField(
-                  controller: tagsTextEditingController,
-                  style: TextStyle(fontSize: 18),
-                  onSubmitted: (_){
-                    addTag();
-                  },
-                  decoration: InputDecoration(
-                      hintText: "Add tags...",
-                      hintStyle: TextStyle(fontSize: 16),
-                      suffixIcon: IconButton(
-                        color: Color(0xffb1325f),
-                        icon: Icon(Icons.add_circle_outline),
-                        iconSize: 26,
-                        onPressed: addTag,
-                      )
-                  ),
-                )
-            ),
-            Container(
-              alignment: Alignment.topLeft,
-              padding: EdgeInsets.fromLTRB(15,5,15,30),
-              child: Wrap(
-                direction: Axis.horizontal,
-                spacing: 10,
-                runSpacing: -5,
-                children: tags.map((val) {
-                  return Chip(
-                    label: Text(val),
-                    labelStyle: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w300,
-                    ),
-                    deleteIcon: Icon(
-                      Icons.close,
-                      size: 20,
-                    ),
-                    deleteIconColor: Colors.white,
-                    backgroundColor: Color(0xffb1325f),
-                    elevation: 8,
-                    padding: EdgeInsets.all(8),
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    onDeleted: () {
-                      setState(() {
-                        tags.remove(val);
-                        tagsList.remove(val);
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
             ),
           ],
         ),

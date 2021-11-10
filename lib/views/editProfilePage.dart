@@ -116,8 +116,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Reference ref = FirebaseStorage.instance
                     .ref()
                     .child('profilePhoto')
-                    .child(username)
-                    .child(username+'-${DateTime.now().toString()}');
+                    .child(FirebaseAuth.instance.currentUser.uid)
+                    .child(FirebaseAuth.instance.currentUser.uid+'-${DateTime.now().toString()}');
                 UploadTask task = ref.putFile(profilePic);
                 task.whenComplete(() async {
                   url1 = await ref.getDownloadURL();
@@ -137,8 +137,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Reference ref = FirebaseStorage.instance
                     .ref()
                     .child('profileBgPhoto')
-                    .child(username)
-                    .child(username+'-${DateTime.now().toString()}');
+                    .child(FirebaseAuth.instance.currentUser.uid)
+                    .child(FirebaseAuth.instance.currentUser.uid+'-${DateTime.now().toString()}');
                 UploadTask task = ref.putFile(profileBgPic);
                 task.whenComplete(() async {
                   url2 = await ref.getDownloadURL();
@@ -317,11 +317,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     height: 150,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: profileBgPhoto != null ? NetworkImage(profileBgPhoto) : AssetImage("assets/images/bg.jpg"),
-                            fit: BoxFit.fitWidth
-                        )
+                    child: profileBgPhoto != null ?
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 150,
+                      child: Image.network(profileBgPhoto,
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ) :
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 150,
+                      color: Color(0xffb1325f),
                     ),
                   ) :
                   Container(

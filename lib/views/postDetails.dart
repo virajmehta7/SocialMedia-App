@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coolname/views/tag.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'tag.dart';
 
 class PostDetails extends StatefulWidget {
   final profilePhoto, doc;
@@ -16,6 +17,48 @@ class PostDetails extends StatefulWidget {
 class _PostDetailsState extends State<PostDetails> {
 
   bool loading = false;
+
+  RichText convertHashtag(String text) {
+    List<String> split = text.split(" ");
+    List<String> hashtags = split.getRange(0, split.length).fold([], (t, e) {
+      var texts = e.split(" ");
+      if (texts.length > 1) {
+        return List.from(t)
+          ..addAll(["${texts.first}", "${e.substring(texts.first.length)}"]);
+      }
+      return List.from(t)
+        ..add("${texts.first}");
+    });
+
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(text: "")
+        ]
+          ..addAll(
+              hashtags.map((text) => text.contains("#") ?
+              TextSpan(text: text + " ",
+                  style: TextStyle(
+                    color: Color(0xffb1325f),
+                    fontSize: 16,
+                  ),
+                recognizer: TapGestureRecognizer()..onTap = (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Tag(
+                              tag: text.toString().substring(1),
+                            )));
+                },
+              ) :
+              TextSpan(text: text + " ",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  )
+              )
+              ).toList(),
+          ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +110,7 @@ class _PostDetailsState extends State<PostDetails> {
                         imageUrl: widget.profilePhoto,
                         imageBuilder: (context, imageProvider) =>
                             CircleAvatar(
-                              radius: 22,
+                              radius: 20,
                               child: Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
@@ -77,17 +120,11 @@ class _PostDetailsState extends State<PostDetails> {
                             ),
                         errorWidget: (context, url, error) => Icon(Icons.error_outline),
                       )
-                      // CircleAvatar(
-                      //   radius: 22,
-                      //   backgroundImage: NetworkImage(
-                      //       widget.profilePhoto
-                      //   ),
-                      // ),
                     ) :
                     Padding(
                       padding: EdgeInsets.fromLTRB(20,15,5,0),
                       child: CircleAvatar(
-                        radius: 22,
+                        radius: 20,
                         backgroundImage: AssetImage("assets/images/profile.png"),
                         backgroundColor: Colors.white,
                       ),
@@ -98,7 +135,7 @@ class _PostDetailsState extends State<PostDetails> {
                         child: Text(FirebaseAuth.instance.currentUser.displayName,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 18,
                               color: Colors.black,
                               fontWeight: FontWeight.w500
                           ),
@@ -141,22 +178,13 @@ class _PostDetailsState extends State<PostDetails> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                   child: Divider(
-                    thickness: 1.5,
+                    thickness: 0.8,
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.fromLTRB(20,1,20,8),
-                  // decoration: BoxDecoration(
-                  //     boxShadow: [
-                  //       BoxShadow(
-                  //           offset: Offset(6,4),
-                  //           blurRadius: 5,
-                  //           color: Colors.grey
-                  //       )
-                  //     ]
-                  // ),
                   child: CachedNetworkImage(
                     imageUrl: snapshot.data['photo'],
                     progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -166,66 +194,22 @@ class _PostDetailsState extends State<PostDetails> {
                         ),
                     errorWidget: (context, url, error) => Icon(Icons.error_outline),
                   )
-                  // Image(
-                  //   image: NetworkImage(
-                  //       snapshot.data['photo']
-                  //   ),
-                  // ),
                 ),
                 Container(
                   alignment: Alignment.centerRight,
                   padding: EdgeInsets.fromLTRB(15,1,20,5),
                   child: Text(date,
                     style: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w300
+                      fontSize: 12,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w300,
                     ),
                   ),
                 ),
-                snapshot.data['tags'].toString().isNotEmpty ?
-                Container(
-                  alignment: Alignment.topLeft,
-                  padding: EdgeInsets.fromLTRB(15,1,15,5),
-                  child: Wrap(
-                    direction: Axis.horizontal,
-                    spacing: 10,
-                    runSpacing: -5,
-                    children: List.from(snapshot.data['tags']).map((val) {
-                      return GestureDetector(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Tag(
-                            tag: val.toString().substring(1),
-                          )));
-                        },
-                        behavior: HitTestBehavior.translucent,
-                        child: Chip(
-                          label: Text(val),
-                          labelStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w300,
-                          ),
-                          backgroundColor: Color(0xffb1325f),
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ) :
-                Container(),
                 snapshot.data['caption'].toString().isNotEmpty ?
                 Padding(
                   padding: EdgeInsets.fromLTRB(20,0,20,30),
-                  child: Text(snapshot.data['caption'],
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                    ),
-                  ),
+                  child: convertHashtag(snapshot.data['caption'])
                 ) :
                 Container(),
               ],

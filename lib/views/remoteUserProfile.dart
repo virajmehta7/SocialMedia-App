@@ -249,7 +249,6 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
                             photo: snapshot.data.docs[index]['photo'],
                             time: snapshot.data.docs[index]['postedAt'],
                             caption: snapshot.data.docs[index]['caption'],
-                            tag: snapshot.data.docs[index]['tags'],
                             doc: snapshot.data.docs[index]['doc'],
                             username: snapshot.data.docs[index]['username'],
                             uid: snapshot.data.docs[index]['uid'],

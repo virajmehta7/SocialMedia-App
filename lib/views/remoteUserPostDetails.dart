@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'remoteUserProfile.dart';
@@ -8,9 +9,9 @@ import 'tabsPage/profileTabPage.dart';
 import 'tag.dart';
 
 class RemoteUserPostDetail extends StatefulWidget {
-  final photo, time, tag, caption, doc, username, uid;
+  final photo, time, caption, doc, username, uid;
   const RemoteUserPostDetail({Key key,
-    this.photo, this.time, this.tag, this.caption, this.doc, this.username, this.uid
+    this.photo, this.time, this.caption, this.doc, this.username, this.uid
   }) : super(key: key);
 
   @override
@@ -20,6 +21,49 @@ class RemoteUserPostDetail extends StatefulWidget {
 class _RemoteUserPostDetailState extends State<RemoteUserPostDetail> {
 
   var profilePhoto;
+
+  RichText convertHashtag(String text) {
+    List<String> split = text.split(" ");
+    List<String> hashtags = split.getRange(0, split.length).fold([], (t, e) {
+      var texts = e.split(" ");
+      if (texts.length > 1) {
+        return List.from(t)
+          ..addAll(["${texts.first}", "${e.substring(texts.first.length)}"]);
+      }
+      return List.from(t)
+        ..add("${texts.first}");
+    });
+
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(text: "")
+        ]
+          ..addAll(
+            hashtags.map((text) => text.contains("#") ?
+            TextSpan(text: text + " ",
+              style: TextStyle(
+                color: Color(0xffb1325f),
+                fontSize: 16,
+              ),
+              recognizer: TapGestureRecognizer()..onTap = (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Tag(
+                  tag: text.toString().substring(1),
+                )));
+              },
+            ) :
+            TextSpan(text: text + " ",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                )
+            )
+            ).toList(),
+          ),
+      ),
+    );
+  }
+
   getData() async {
     DocumentSnapshot ds = await FirebaseFirestore.instance
         .collection('users')
@@ -78,7 +122,7 @@ class _RemoteUserPostDetailState extends State<RemoteUserPostDetail> {
                       imageUrl: profilePhoto,
                       imageBuilder: (context, imageProvider) =>
                           CircleAvatar(
-                            radius: 22,
+                            radius: 20,
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
@@ -88,12 +132,6 @@ class _RemoteUserPostDetailState extends State<RemoteUserPostDetail> {
                           ),
                       errorWidget: (context, url, error) => Icon(Icons.error_outline),
                     )
-                    // CircleAvatar(
-                    //   radius: 22,
-                    //   backgroundImage: NetworkImage(
-                    //       profilePhoto
-                    //   ),
-                    // ),
                   ) :
                   Padding(
                     padding: EdgeInsets.fromLTRB(20,15,5,0),
@@ -127,15 +165,6 @@ class _RemoteUserPostDetailState extends State<RemoteUserPostDetail> {
             ),
             Container(
               margin: EdgeInsets.fromLTRB(20,1,20,8),
-              // decoration: BoxDecoration(
-              //     boxShadow: [
-              //       BoxShadow(
-              //           offset: Offset(6,4),
-              //           blurRadius: 5,
-              //           color: Colors.grey
-              //       )
-              //     ]
-              // ),
               child: CachedNetworkImage(
                 imageUrl: widget.photo,
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -145,64 +174,22 @@ class _RemoteUserPostDetailState extends State<RemoteUserPostDetail> {
                     ),
                 errorWidget: (context, url, error) => Icon(Icons.error_outline),
               )
-              // Image(
-              //   image: NetworkImage(widget.photo),
-              // ),
             ),
             Container(
               alignment: Alignment.centerRight,
               padding: EdgeInsets.fromLTRB(15,1,20,5),
               child: Text(date,
                 style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w300
+                  fontSize: 12,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ),
-            widget.tag.toString().isNotEmpty ?
-            Container(
-              alignment: Alignment.topLeft,
-              padding: EdgeInsets.fromLTRB(15,1,15,5),
-              child: Wrap(
-                direction: Axis.horizontal,
-                spacing: 10,
-                runSpacing: -5,
-                children: List.from(widget.tag).map((val) {
-                  return GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Tag(
-                        tag: val.toString().substring(1),
-                      )));
-                    },
-                    behavior: HitTestBehavior.translucent,
-                    child: Chip(
-                      label: Text(val),
-                      labelStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300,
-                      ),
-                      backgroundColor: Color(0xffb1325f),
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ) :
-            Container(),
             widget.caption.toString().isNotEmpty ?
             Padding(
-              padding: EdgeInsets.fromLTRB(20,0,20,30),
-              child: Text(widget.caption,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                ),
-              ),
+                padding: EdgeInsets.fromLTRB(20,0,20,30),
+                child: convertHashtag(widget.caption)
             ) :
             Container(),
           ],

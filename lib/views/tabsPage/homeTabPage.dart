@@ -53,13 +53,6 @@ class _HomeTabPageState extends State<HomeTabPage> {
                   errorWidget: (context, url, error) => Icon(Icons.error_outline),
                 ),
               ),
-              // ClipRRect(
-              //   borderRadius: BorderRadius.only(
-              //     bottomLeft: Radius.circular(20),
-              //     bottomRight: Radius.circular(20)
-              //   ),
-              //   child: Image.network(photo),
-              // ),
             ],
           ),
         )
@@ -134,7 +127,6 @@ class _HomeTabPageState extends State<HomeTabPage> {
                           photo: snapshot.data.docs[index]['photo'],
                           time: snapshot.data.docs[index]['postedAt'],
                           caption: snapshot.data.docs[index]['caption'],
-                          tag: snapshot.data.docs[index]['tags'],
                           doc: snapshot.data.docs[index]['doc'],
                           username: snapshot.data.docs[index]['username'],
                           uid: snapshot.data.docs[index]['uid'],
@@ -157,12 +149,6 @@ class _HomeTabPageState extends State<HomeTabPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // ClipRRect(
-                            //   borderRadius: BorderRadius.circular(20),
-                            //   child: Image(
-                            //     image: NetworkImage(snapshot.data.docs[index]['photo']),
-                            //   ),
-                            // ),
                             ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: CachedNetworkImage(
