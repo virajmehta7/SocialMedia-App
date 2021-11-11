@@ -1,3 +1,4 @@
+import 'package:coolname/utils/colors.dart';
 import 'package:coolname/utils/outlineInputBorder.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   Widget showAlert() {
     if (error != null) {
       return Container(
-        color: Color(0xffb1325f),
+        color: Colors.red,
         width: double.infinity,
         padding: EdgeInsets.all(8),
         child: Row(
@@ -104,7 +105,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               }
             },
             icon: Icon(Icons.done),
-            color: Color(0xffb1325f),
+            color: mlight,
           )
         ],
       ),
@@ -125,7 +126,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                         border: OutlineInputBorder(borderSide: BorderSide()),
                         labelText: 'Current password',
                         labelStyle: TextStyle(
-                            color: Color(0xffb1325f),
+                            color: mlight,
                             fontSize: 16
                         ),
                         enabledBorder: outlineInputBorder,
@@ -151,7 +152,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                         border: OutlineInputBorder(borderSide: BorderSide()),
                         labelText: 'New password',
                         labelStyle: TextStyle(
-                            color: Color(0xffb1325f),
+                            color: mlight,
                             fontSize: 16
                         ),
                         enabledBorder: outlineInputBorder,

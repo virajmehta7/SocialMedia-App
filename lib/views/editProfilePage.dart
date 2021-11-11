@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coolname/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -106,7 +107,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           IconButton(
             icon: Icon(
               Icons.check,
-              color: Color(0xffb1325f),
+              color: mlight,
             ),
             onPressed: () async {
               setState(() {
@@ -189,7 +190,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           padding: EdgeInsets.only(top: 50),
           child: Center(
             child: CircularProgressIndicator(
-              color: Color(0xffb1325f),
+              color: mlight,
             ),
           ),
         ) :
@@ -328,7 +329,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     Container(
                       width: MediaQuery.of(context).size.width,
                       height: 150,
-                      color: Color(0xffb1325f),
+                      color: mlight,
                     ),
                   ) :
                   Container(

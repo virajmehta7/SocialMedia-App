@@ -1,3 +1,4 @@
+import 'package:coolname/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'bottomSheet/login.dart';
 import 'bottomSheet/signup.dart';
@@ -25,9 +26,10 @@ class _WelcomeState extends State<Welcome> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color(0xffDA4453),
-                Color(0xffb1325f),
-                Color(0xff89216B)
+                Colors.white,
+                light,
+                mid,
+                mdark
               ]
             )
           ),
@@ -67,7 +69,7 @@ class _WelcomeState extends State<Welcome> {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.black.withOpacity(0.1),
+                    primary: Colors.black.withOpacity(0.15),
                     shadowColor: Colors.transparent,
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -94,7 +96,7 @@ class _WelcomeState extends State<Welcome> {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.black.withOpacity(0.6),
+                    primary: Colors.black.withOpacity(0.65),
                     shadowColor: Colors.transparent,
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

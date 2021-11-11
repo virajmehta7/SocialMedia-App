@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coolname/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,7 @@ class _UploadPostState extends State<UploadPost> {
           IconButton(
             icon: Icon(
               Icons.done,
-              color: Color(0xffb1325f),
+              color: mlight,
             ),
             onPressed: (){
               setState(() {
@@ -152,7 +153,7 @@ class _UploadPostState extends State<UploadPost> {
           padding: EdgeInsets.only(top: 50),
           alignment: Alignment.center,
           child: CircularProgressIndicator(
-            color: Color(0xffb1325f),
+            color: mlight,
           ),
         ) :
         Column(

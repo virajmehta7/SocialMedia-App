@@ -1,4 +1,6 @@
+import 'package:coolname/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'tabsPage/homeTabPage.dart';
 import 'tabsPage/profileTabPage.dart';
 import 'tabsPage/searchTabPage.dart';
@@ -31,18 +33,10 @@ class _HomeState extends State<Home> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 70),
+              margin: EdgeInsets.symmetric(vertical: 20, horizontal: 70),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xffDA4453),
-                      Color(0xffb1325f),
-                      Color(0xff89216B)
-                    ]
-                ),
+                color: Colors.white
               ),
               child: BottomNavigationBar(
                 onTap: (index){
@@ -55,8 +49,9 @@ class _HomeState extends State<Home> {
                 showUnselectedLabels: false,
                 backgroundColor: Colors.transparent,
                 elevation: 0,
+                iconSize: 30,
                 type: BottomNavigationBarType.fixed,
-                selectedIconTheme: IconThemeData(color: Colors.white),
+                selectedIconTheme: IconThemeData(color: mlight),
                 items: [
                   BottomNavigationBarItem(
                     icon: Icon(Icons.home),

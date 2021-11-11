@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coolname/services/database.dart';
+import 'package:coolname/utils/colors.dart';
 import 'package:coolname/utils/outlineInputBorder.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
   Widget showAlert() {
     if (error != null) {
       return Container(
-        color: Color(0xffb1325f),
+        color: Colors.red,
         width: double.infinity,
         padding: EdgeInsets.all(8),
         child: Row(
@@ -79,7 +80,7 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
         ),
         child: Center(
           child: CircularProgressIndicator(
-            color: Color(0xffb1325f),
+            color: mlight,
           ),
         ),
       ) :
@@ -110,7 +111,7 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w300,
-                      color: Color(0xffb1325f),
+                      color: Color(0XFF25A8C8),
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -127,12 +128,12 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
                           decoration: InputDecoration(
                             prefixIcon: Icon(
                               Icons.person,
-                              color: Color(0xffb1325f),
+                              color: mlight,
                             ),
                             labelText: 'Username',
                             labelStyle: TextStyle(
                                 fontWeight: FontWeight.w300,
-                                color: Color(0xffb1325f),
+                                color: Colors.black,
                                 fontSize: 16
                             ),
                             enabledBorder: outlineInputBorder,
@@ -155,12 +156,12 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
                           decoration: InputDecoration(
                             prefixIcon: Icon(
                               Icons.email,
-                              color: Color(0xffb1325f),
+                              color: mlight,
                             ),
                             labelText: 'Email',
                             labelStyle: TextStyle(
                                 fontWeight: FontWeight.w300,
-                                color: Color(0xffb1325f),
+                                color: Colors.black,
                                 fontSize: 16
                             ),
                             enabledBorder: outlineInputBorder,
@@ -183,12 +184,12 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
                           decoration: InputDecoration(
                             prefixIcon: Icon(
                               Icons.lock,
-                              color: Color(0xffb1325f),
+                              color: mlight,
                             ),
                             labelText: 'Password',
                             labelStyle: TextStyle(
                                 fontWeight: FontWeight.w300,
-                                color: Color(0xffb1325f),
+                                color: Colors.black,
                                 fontSize: 16
                             ),
                             enabledBorder: outlineInputBorder,
@@ -220,9 +221,8 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xffb1325f),
-                        shadowColor: Colors.transparent,
-                        elevation: 0,
+                        primary: Color(0XFF25A8C8),
+                        elevation: 8,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       ),
                       onPressed: () async {

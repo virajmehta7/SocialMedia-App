@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coolname/utils/colors.dart';
 import 'package:coolname/views/tag.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -39,7 +40,7 @@ class _PostDetailsState extends State<PostDetails> {
               hashtags.map((text) => text.contains("#") ?
               TextSpan(text: text + " ",
                   style: TextStyle(
-                    color: Color(0xffb1325f),
+                    color: mlight,
                     fontSize: 16,
                   ),
                 recognizer: TapGestureRecognizer()..onTap = (){
@@ -81,7 +82,7 @@ class _PostDetailsState extends State<PostDetails> {
           padding: EdgeInsets.only(top: 50),
           alignment: Alignment.center,
           child: CircularProgressIndicator(
-            color: Color(0xffb1325f),
+            color: mlight,
           ),
         ) :
         StreamBuilder(
@@ -190,7 +191,7 @@ class _PostDetailsState extends State<PostDetails> {
                     progressIndicatorBuilder: (context, url, downloadProgress) =>
                         CircularProgressIndicator(
                           value: downloadProgress.progress,
-                          color: Color(0xffb1325f),
+                          color: mlight,
                         ),
                     errorWidget: (context, url, error) => Icon(Icons.error_outline),
                   )

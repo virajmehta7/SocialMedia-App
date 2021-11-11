@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coolname/utils/colors.dart';
 import 'package:flutter/material.dart';
 import '../tag.dart';
 
@@ -44,10 +45,9 @@ class _SearchTagsState extends State<SearchTags> {
                         });
                       });
                     },
-                    icon: CircleAvatar(
-                      backgroundColor: Color(0xffb1325f),
-                      child: Icon(Icons.search, color: Colors.white,),
-                      radius: 40,
+                    icon: Icon(
+                      Icons.search,
+                      color: mlight,
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
@@ -94,7 +94,7 @@ class _SearchTagsState extends State<SearchTags> {
                           backgroundColor: Colors.white,
                           child: Text('#',
                             style: TextStyle(
-                              color: Color(0xffb1325f),
+                              color: mlight,
                               fontSize: 30
                             ),
                           ),

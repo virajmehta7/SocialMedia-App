@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coolname/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'remoteUserPostDetails.dart';
@@ -55,7 +56,7 @@ class _TagState extends State<Tag> {
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(
                         value: downloadProgress.progress,
-                        color: Color(0xffb1325f),
+                        color: mlight,
                       ),
                   errorWidget: (context, url, error) => Icon(Icons.error_outline),
                 ),
@@ -169,7 +170,7 @@ class _TagState extends State<Tag> {
                               progressIndicatorBuilder: (context, url, downloadProgress) =>
                                   CircularProgressIndicator(
                                     value: downloadProgress.progress,
-                                    color: Color(0xffb1325f),
+                                    color: mlight,
                                   ),
                               errorWidget: (context, url, error) => Icon(Icons.error_outline),
                             ),

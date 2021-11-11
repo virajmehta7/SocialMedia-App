@@ -17,14 +17,9 @@ class _AddVideosState extends State<AddVideos> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.drag_handle_rounded,
-            size: 30,
-            color: Colors.white,
-          ),
           Container(
             width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.fromLTRB(20, 1, 20, 20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20),
@@ -36,6 +31,13 @@ class _AddVideosState extends State<AddVideos> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                Center(
+                  child: Icon(
+                    Icons.drag_handle_rounded,
+                    size: 30,
+                    color: Colors.grey,
+                  ),
+                ),
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   child: Row(

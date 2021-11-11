@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:coolname/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,8 +26,8 @@ class _AddPostState extends State<AddPost> {
           androidUiSettings: AndroidUiSettings(
             toolbarTitle: "Edit photo",
             toolbarColor: Colors.white,
-            toolbarWidgetColor: Color(0xffb1325f),
-            activeControlsWidgetColor: Color(0xffb1325f),
+            toolbarWidgetColor: mlight,
+            activeControlsWidgetColor: mlight,
           )
       );
       setState(() {
@@ -47,14 +48,9 @@ class _AddPostState extends State<AddPost> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.drag_handle_rounded,
-            size: 30,
-            color: Colors.white,
-          ),
           Container(
             width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.fromLTRB(20, 1, 20, 20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20),
@@ -66,6 +62,13 @@ class _AddPostState extends State<AddPost> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                Center(
+                  child: Icon(
+                    Icons.drag_handle_rounded,
+                    size: 30,
+                    color: Colors.grey,
+                  ),
+                ),
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   child: Row(

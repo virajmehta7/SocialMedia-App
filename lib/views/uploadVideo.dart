@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coolname/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,7 @@ class _UploadVideoState extends State<UploadVideo> {
           IconButton(
             icon: Icon(
               Icons.done,
-              color: Color(0xffb1325f),
+              color: mlight,
             ),
             onPressed: (){
               setState(() {
@@ -120,7 +121,7 @@ class _UploadVideoState extends State<UploadVideo> {
           padding: EdgeInsets.only(top: 50),
           alignment: Alignment.center,
           child: CircularProgressIndicator(
-            color: Color(0xffb1325f),
+            color: mlight,
           ),
         ) :
         Column(
@@ -157,12 +158,12 @@ class _UploadVideoState extends State<UploadVideo> {
                         child: _controller.value.isPlaying ?
                         CircleAvatar(
                           radius: 22,
-                          backgroundColor: Color(0xffb1325f),
+                          backgroundColor: mlight,
                           child: Icon(Icons.pause),
                         ) :
                         CircleAvatar(
                           radius: 22,
-                          backgroundColor: Color(0xffb1325f),
+                          backgroundColor: mlight,
                           child: Icon(Icons.play_arrow),
                         ),
                       ) :
@@ -174,7 +175,7 @@ class _UploadVideoState extends State<UploadVideo> {
                           allowScrubbing: true,
                           padding: EdgeInsets.all(10),
                           colors: VideoProgressColors(
-                            playedColor: Color(0xffb1325f),
+                            playedColor: mlight,
                           ),
                         ),
                       ),

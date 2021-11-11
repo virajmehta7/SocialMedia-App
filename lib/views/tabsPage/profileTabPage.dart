@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coolname/utils/colors.dart';
 import 'package:coolname/views/bottomSheet/addPost.dart';
 import 'package:coolname/views/bottomSheet/more.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,7 +51,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(
                         value: downloadProgress.progress,
-                        color: Color(0xffb1325f),
+                        color: mlight,
                       ),
                   errorWidget: (context, url, error) => Icon(Icons.error_outline),
                 ),
@@ -122,7 +123,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                 if(!snapshot.hasData)
                   return Center(
                       child: CircularProgressIndicator(
-                          color: Color(0xffb1325f)
+                          color: mlight
                       )
                   );
                 profilePhoto = snapshot.data['profilePhoto'];
@@ -144,7 +145,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           height: 150,
-                          color: Color(0xffb1325f),
+                          color: mlight,
                         ),
                         snapshot.data['profilePhoto'] != null ?
                         Container(
@@ -247,9 +248,8 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                         },
                         child: Text('Share your first photo',
                           style: TextStyle(
-                            color: Color(0xffb1325f),
+                            color: mlight,
                             fontSize: 18,
-                            fontWeight: FontWeight.bold
                           ),
                         ),
                       ),
@@ -300,7 +300,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                                     CircularProgressIndicator(
                                       value: downloadProgress.progress,
-                                      color: Color(0xffb1325f),
+                                      color: mlight,
                                     ),
                                 errorWidget: (context, url, error) => Icon(Icons.error_outline),
                               ),

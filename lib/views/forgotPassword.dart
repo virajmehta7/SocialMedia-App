@@ -1,3 +1,4 @@
+import 'package:coolname/utils/colors.dart';
 import 'package:coolname/utils/outlineInputBorder.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   Widget showAlert() {
     if (error != null) {
       return Container(
-        color: Color(0xffb1325f),
+        color: Colors.red,
         width: double.infinity,
         padding: EdgeInsets.all(8),
         child: Row(
@@ -81,12 +82,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       border: OutlineInputBorder(borderSide: BorderSide()),
                       labelText: 'Email',
                       labelStyle: TextStyle(
-                          color: Color(0xffb1325f),
+                          color: mlight,
                           fontSize: 16
                       ),
                     prefixIcon: Icon(
                       Icons.email,
-                      color: Color(0xffb1325f),
+                      color: mlight,
                     ),
                     enabledBorder: outlineInputBorder,
                     focusedBorder: outlineInputBorder,
@@ -147,7 +148,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               style: ElevatedButton.styleFrom(
                 elevation: 10,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                primary: Color(0xffb1325f),
+                primary: mlight,
                 padding: EdgeInsets.symmetric(horizontal: 22, vertical: 12),
               ),
             )

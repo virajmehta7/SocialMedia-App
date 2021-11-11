@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coolname/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'remoteUserPostDetails.dart';
@@ -55,7 +56,7 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(
                         value: downloadProgress.progress,
-                        color: Color(0xffb1325f),
+                        color: mlight,
                       ),
                   errorWidget: (context, url, error) => Icon(Icons.error_outline),
                 ),
@@ -94,7 +95,7 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
                 if(!snapshot.hasData)
                   return Center(
                       child: CircularProgressIndicator(
-                          color: Color(0xffb1325f)
+                          color: mlight
                       )
                   );
                 return Column(
@@ -122,7 +123,7 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           height: 150,
-                          color: Color(0xffb1325f),
+                          color: mlight,
                         ),
                         snapshot.data['profilePhoto'] != null ?
                         Container(
@@ -281,7 +282,7 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
                                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                                     CircularProgressIndicator(
                                       value: downloadProgress.progress,
-                                      color: Color(0xffb1325f),
+                                      color: mlight,
                                     ),
                                 errorWidget: (context, url, error) => Icon(Icons.error_outline),
                               ),

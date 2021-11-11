@@ -1,3 +1,4 @@
+import 'package:coolname/utils/colors.dart';
 import 'package:coolname/views/tabBarPages/accounts.dart';
 import 'package:coolname/views/tabBarPages/tags.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class _SearchTabPageState extends State<SearchTabPage> with SingleTickerProvider
         elevation: 0,
         backgroundColor: Colors.transparent,
         bottom: TabBar(
-          indicatorColor: Color(0xffb1325f),
+          indicatorColor: mlight,
           labelColor: Colors.black,
           unselectedLabelColor: Colors.black,
           labelStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),

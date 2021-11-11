@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coolname/utils/colors.dart';
 import 'package:coolname/views/tabsPage/profileTabPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -46,10 +47,9 @@ class _SearchAccountsState extends State<SearchAccounts> {
                         });
                       });
                     },
-                    icon: CircleAvatar(
-                      backgroundColor: Color(0xffb1325f),
-                      child: Icon(Icons.search, color: Colors.white,),
-                      radius: 40,
+                    icon: Icon(
+                      Icons.search,
+                      color: mlight,
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(

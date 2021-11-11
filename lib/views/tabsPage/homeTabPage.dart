@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coolname/utils/colors.dart';
 import 'package:coolname/views/bottomSheet/addPost.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -48,7 +49,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(
                         value: downloadProgress.progress,
-                        color: Color(0xffb1325f),
+                        color: mlight,
                       ),
                   errorWidget: (context, url, error) => Icon(Icons.error_outline),
                 ),
@@ -108,7 +109,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
                 if(!snapshot.hasData)
                   return Center(
                       child: CircularProgressIndicator(
-                          color: Color(0xffb1325f)
+                          color: mlight
                       )
                   );
                 return StaggeredGridView.countBuilder(
@@ -156,7 +157,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
                                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                                   CircularProgressIndicator(
                                     value: downloadProgress.progress,
-                                    color: Color(0xffb1325f),
+                                    color: mlight,
                                   ),
                                 errorWidget: (context, url, error) => Icon(Icons.error_outline),
                               ),

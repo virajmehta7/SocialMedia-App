@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coolname/utils/colors.dart';
 import 'package:coolname/views/bottomSheet/addVideos.dart';
 import 'package:flutter/material.dart';
 
@@ -51,7 +52,7 @@ class _VideosTabPageState extends State<VideosTabPage> {
             if(!snapshot.hasData)
               return Center(
                   child: CircularProgressIndicator(
-                      color: Color(0xffb1325f)
+                      color: mlight
                   )
               );
             return Container();
