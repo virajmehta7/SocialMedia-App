@@ -89,13 +89,8 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.drag_handle_rounded,
-              color: Colors.white,
-              size: 30,
-            ),
             Container(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
@@ -106,12 +101,21 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Center(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width*0.1,
+                        child: Divider(
+                          thickness: 3,
+                          color: Colors.grey.shade400,
+                        ),
+                      )
+                  ),
                   SizedBox(height: 10),
                   Text('Create \nAccount',
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w300,
-                      color: Color(0XFF25A8C8),
+                      color: mid,
                       letterSpacing: 0.5,
                     ),
                   ),

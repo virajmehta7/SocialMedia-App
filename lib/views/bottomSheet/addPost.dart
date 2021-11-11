@@ -50,7 +50,7 @@ class _AddPostState extends State<AddPost> {
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.fromLTRB(20, 1, 20, 20),
+            padding: EdgeInsets.fromLTRB(20, 5, 20, 20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20),
@@ -63,11 +63,13 @@ class _AddPostState extends State<AddPost> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Center(
-                  child: Icon(
-                    Icons.drag_handle_rounded,
-                    size: 30,
-                    color: Colors.grey,
-                  ),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width*0.1,
+                    child: Divider(
+                      thickness: 3,
+                      color: Colors.grey.shade400,
+                    ),
+                  )
                 ),
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
