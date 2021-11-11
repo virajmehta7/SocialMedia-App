@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 class UploadVideo extends StatefulWidget {
   final video;
@@ -14,13 +15,28 @@ class UploadVideo extends StatefulWidget {
 class _UploadVideoState extends State<UploadVideo> {
 
   bool loading = false;
-
+  bool pressed = false;
   TextEditingController captionTextEditingController = TextEditingController();
-  TextEditingController tagsTextEditingController = TextEditingController();
-
   String url;
   String username = FirebaseAuth.instance.currentUser.displayName;
   String uid = FirebaseAuth.instance.currentUser.uid;
+  VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.file(widget.video)
+    ..addListener(() => setState(() {}))
+    ..setLooping(true)
+    ..initialize()
+        .then((_) => _controller.play());
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,15 +125,66 @@ class _UploadVideoState extends State<UploadVideo> {
         ) :
         Column(
           children: [
-            GestureDetector(
-              onTap: (){},
-              behavior: HitTestBehavior.translucent,
-              child: Container(
-                margin: EdgeInsets.fromLTRB(30,30,30,20),
-                height: MediaQuery.of(context).size.height*0.5,
-                child: Stack(
-                  alignment: Alignment.bottomRight,
-                  children: [],
+            Container(
+              margin: EdgeInsets.all(30),
+              child: GestureDetector(
+                onTap: (){
+                  setState(() {
+                    pressed = true;
+                    if (_controller.value.isPlaying) {
+                      _controller.pause();
+                    } else {
+                      _controller.play();
+                    }
+                    Future.delayed(Duration(seconds: 1)).then((value) => {
+                      if(mounted)
+                        setState(() {
+                          pressed = false;
+                        })
+                    });
+                  });
+                },
+                behavior: HitTestBehavior.translucent,
+                child: _controller.value.isInitialized ?
+                AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: Stack(
+                    children: [
+                      VideoPlayer(_controller),
+                      pressed ?
+                      Align(
+                        alignment: Alignment.center,
+                        child: _controller.value.isPlaying ?
+                        CircleAvatar(
+                          radius: 22,
+                          backgroundColor: Color(0xffb1325f),
+                          child: Icon(Icons.pause),
+                        ) :
+                        CircleAvatar(
+                          radius: 22,
+                          backgroundColor: Color(0xffb1325f),
+                          child: Icon(Icons.play_arrow),
+                        ),
+                      ) :
+                      Container(),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: VideoProgressIndicator(
+                          _controller,
+                          allowScrubbing: true,
+                          padding: EdgeInsets.all(10),
+                          colors: VideoProgressColors(
+                            playedColor: Color(0xffb1325f),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ) :
+                Container(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
               ),
             ),
