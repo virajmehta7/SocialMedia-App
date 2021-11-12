@@ -198,43 +198,53 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
                     height: 70,
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.all(10),
-                    child: ElevatedButton(
-                      child: Text('LOGIN',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w300
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [
+                              light,
+                              mid,
+                            ]
                         ),
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Color(0XFF25A8C8),
-                        elevation: 8,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      ),
-                      onPressed: () async {
-                        FocusScope.of(context).unfocus();
-                        if(_formKey.currentState.validate()) {
-                          setState(() {
-                            loading = true;
-                          });
-                          try{
-                            await FirebaseAuth.instance.signInWithEmailAndPassword(
-                                email: emailTextEditingController.text.trim(),
-                                password: passwordTextEditingController.text.trim()
-                            );
-                            final SharedPreferences prefs = await SharedPreferences.getInstance();
-                            prefs.setString('email', emailTextEditingController.text.trim());
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(builder: (context) => Home()),
-                                    (Route<dynamic> route) => false
-                            );
-                          } catch(e){
+                      child: ElevatedButton(
+                        child: Text('LOGIN',
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.transparent,
+                          elevation: 0,
+                        ),
+                        onPressed: () async {
+                          FocusScope.of(context).unfocus();
+                          if(_formKey.currentState.validate()) {
                             setState(() {
-                              error = e.message;
-                              loading = false;
+                              loading = true;
                             });
+                            try{
+                              await FirebaseAuth.instance.signInWithEmailAndPassword(
+                                  email: emailTextEditingController.text.trim(),
+                                  password: passwordTextEditingController.text.trim()
+                              );
+                              final SharedPreferences prefs = await SharedPreferences.getInstance();
+                              prefs.setString('email', emailTextEditingController.text.trim());
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(builder: (context) => Home()),
+                                      (Route<dynamic> route) => false
+                              );
+                            } catch(e){
+                              setState(() {
+                                error = e.message;
+                                loading = false;
+                              });
+                            }
                           }
-                        }
-                      },
+                        },
+                      ),
                     ),
                   ),
                 ],

@@ -217,67 +217,77 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
                     height: 70,
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.all(10),
-                    child: ElevatedButton(
-                      child: Text('SIGN UP',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w300
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [
+                              light,
+                              mid,
+                            ]
                         ),
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Color(0XFF25A8C8),
-                        elevation: 8,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      ),
-                      onPressed: () async {
-                        FocusScope.of(context).unfocus();
-                        final validUsername = await databaseMethods.usernameCheck(usernameTextEditingController.text.trim());
-                        if (!validUsername) {
-                          setState(() {
-                            error = 'The username ${usernameTextEditingController.text.trim()} is not available.';
-                          });
-                        }
-                        else if(_formKey.currentState.validate()){
-                          setState(() {
-                            loading = true;
-                          });
-                          try {
-                            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                                email: emailTextEditingController.text.trim(),
-                                password: passwordTextEditingController.text.trim()
-                            ).then((value) async {
-                              if(value.user != null) {
-                                Map<String, dynamic> userInfoMap = {
-                                  "uid": FirebaseAuth.instance.currentUser.uid,
-                                  "username" : usernameTextEditingController.text,
-                                  "email" : emailTextEditingController.text,
-                                  "name" : usernameTextEditingController.text,
-                                  "bio" : "",
-                                  "profilePhoto" : null,
-                                  "profileBgPhoto" : null
-                                };
-                                await FirebaseFirestore.instance.collection("users")
-                                    .doc(userInfoMap['uid'])
-                                    .set(userInfoMap, SetOptions(merge: true));
-                                await value.user.updateDisplayName(
-                                    usernameTextEditingController.text.trim()
-                                );
-                                final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                prefs.setString('email', emailTextEditingController.text.trim());
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(builder: (context) => Home()),
-                                        (Route<dynamic> route) => false
-                                );
-                              }
-                            });
-                          } catch (e) {
+                      child: ElevatedButton(
+                        child: Text('SIGN UP',
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.transparent,
+                          elevation: 0,
+                        ),
+                        onPressed: () async {
+                          FocusScope.of(context).unfocus();
+                          final validUsername = await databaseMethods.usernameCheck(usernameTextEditingController.text.trim());
+                          if (!validUsername) {
                             setState(() {
-                              error = e.message;
-                              loading = false;
+                              error = 'The username ${usernameTextEditingController.text.trim()} is not available.';
                             });
                           }
-                        }
-                      },
+                          else if(_formKey.currentState.validate()){
+                            setState(() {
+                              loading = true;
+                            });
+                            try {
+                              await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                  email: emailTextEditingController.text.trim(),
+                                  password: passwordTextEditingController.text.trim()
+                              ).then((value) async {
+                                if(value.user != null) {
+                                  Map<String, dynamic> userInfoMap = {
+                                    "uid": FirebaseAuth.instance.currentUser.uid,
+                                    "username" : usernameTextEditingController.text,
+                                    "email" : emailTextEditingController.text,
+                                    "name" : usernameTextEditingController.text,
+                                    "bio" : "",
+                                    "profilePhoto" : null,
+                                    "profileBgPhoto" : null
+                                  };
+                                  await FirebaseFirestore.instance.collection("users")
+                                      .doc(userInfoMap['uid'])
+                                      .set(userInfoMap, SetOptions(merge: true));
+                                  await value.user.updateDisplayName(
+                                      usernameTextEditingController.text.trim()
+                                  );
+                                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  prefs.setString('email', emailTextEditingController.text.trim());
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(builder: (context) => Home()),
+                                          (Route<dynamic> route) => false
+                                  );
+                                }
+                              });
+                            } catch (e) {
+                              setState(() {
+                                error = e.message;
+                                loading = false;
+                              });
+                            }
+                          }
+                        },
+                      ),
                     ),
                   ),
                 ],

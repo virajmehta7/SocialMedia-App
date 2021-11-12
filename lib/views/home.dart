@@ -1,6 +1,5 @@
 import 'package:coolname/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'tabsPage/homeTabPage.dart';
 import 'tabsPage/profileTabPage.dart';
 import 'tabsPage/searchTabPage.dart';
@@ -27,54 +26,39 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          tabs[selectedIndex],
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              margin: EdgeInsets.symmetric(vertical: 20, horizontal: 70),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Colors.white
-              ),
-              child: BottomNavigationBar(
-                onTap: (index){
-                  setState(() {
-                    selectedIndex = index;
-                  });
-                },
-                currentIndex: selectedIndex,
-                showSelectedLabels: false,
-                showUnselectedLabels: false,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                iconSize: 30,
-                type: BottomNavigationBarType.fixed,
-                selectedIconTheme: IconThemeData(color: mlight),
-                items: [
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
-                    label: 'Home',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.search),
-                    label: 'Search',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.video_collection),
-                    label: 'Watch',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
-                    label: 'Profile',
-                  ),
-                ],
-              ),
-            ),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (index){
+          setState(() {
+            selectedIndex = index;
+          });
+        },
+        currentIndex: selectedIndex,
+        backgroundColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
+        selectedIconTheme: IconThemeData(color: mlight),
+        unselectedIconTheme: IconThemeData(color: Colors.grey.shade600),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.video_collection),
+            label: 'Watch',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),
+      body: tabs[selectedIndex],
     );
   }
 }
