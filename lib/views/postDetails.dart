@@ -125,10 +125,22 @@ class _PostDetailsState extends State<PostDetails> {
                     });
                     try{
                       Navigator.pop(context);
+
                       await FirebaseFirestore.instance
                           .collection('AllPosts')
                           .doc(widget.snapshot['doc'])
                           .delete();
+
+                      if(widget.snapshot['tags'].toString().isNotEmpty){
+                        widget.snapshot['tags'].forEach((e) async {
+                          await FirebaseFirestore.instance
+                              .collection('AllTags')
+                              .doc(e.toString().substring(1))
+                              .collection(e.toString().substring(1))
+                              .doc(widget.snapshot['doc'])
+                              .delete();
+                        });
+                      }
                     } catch(e) {
                       setState(() {
                         loading = false;
