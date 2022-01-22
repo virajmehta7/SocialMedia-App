@@ -33,17 +33,19 @@ class _SearchTagsState extends State<SearchTags> {
                   ),
                   suffixIcon: IconButton(
                     onPressed: (){
-                      FocusScope.of(context).unfocus();
-                      FirebaseFirestore.instance
-                          .collection('AllTags')
-                          .where('tag', isGreaterThanOrEqualTo: search.text.trim().toLowerCase())
-                          .where('tag', isLessThan: search.text.trim().toLowerCase() + 'z')
-                          .get()
-                          .then((value) {
-                        setState(() {
-                          querySnapshot = value;
+                      if(search.text.isNotEmpty){
+                        FocusScope.of(context).unfocus();
+                        FirebaseFirestore.instance
+                            .collection('AllTags')
+                            .where('tag', isGreaterThanOrEqualTo: search.text.trim().toLowerCase())
+                            .where('tag', isLessThan: search.text.trim().toLowerCase() + 'z')
+                            .get()
+                            .then((value) {
+                          setState(() {
+                            querySnapshot = value;
+                          });
                         });
-                      });
+                      }
                     },
                     icon: Icon(
                       Icons.search,

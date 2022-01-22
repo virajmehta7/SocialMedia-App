@@ -88,7 +88,6 @@ class _ChangePasswordState extends State<ChangePassword> {
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                   Navigator.pop(context);
-                                  Navigator.pop(context);
                                 },
                                 child: Text('Ok'),
                               )

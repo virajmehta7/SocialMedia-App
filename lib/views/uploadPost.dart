@@ -72,7 +72,6 @@ class _UploadPostState extends State<UploadPost> {
               for (var item in splitTags) {
                 if (item.startsWith("#")) {
                   addTag(item);
-                  print(item);
                 }
               }
 
@@ -89,7 +88,7 @@ class _UploadPostState extends State<UploadPost> {
                     .collection('AllPosts')
                     .doc();
 
-                    doc.set({
+                    await doc.set({
                       'username': username,
                       'photo': url,
                       'caption': captionTextEditingController.text.trim(),
@@ -97,7 +96,38 @@ class _UploadPostState extends State<UploadPost> {
                       'postedAt': Timestamp.now(),
                       'tags': FieldValue.arrayUnion(tagsList),
                       'doc': doc.id,
+                    }).then((value) async => {
+                      if(tagsList.isNotEmpty){
+                        await doc.update({
+                          'tags': FieldValue.arrayUnion(tagsList)
+                        })
+                      }
                     });
+                if(tags.isNotEmpty){
+                  tags.forEach((element) async {
+                    var doc1 = FirebaseFirestore.instance
+                        .collection('AllTags')
+                        .doc(element.substring(1));
+                    doc1.set(
+                        {
+                          'tag' : element.substring(1)
+                        },
+                        SetOptions(merge: true)
+                    );
+                    doc1.collection(element.substring(1))
+                        .doc(doc.id)
+                        .set({
+                      'username': username,
+                      'photo': url,
+                      'caption': captionTextEditingController.text.trim(),
+                      'doc': doc.id,
+                      'uid': uid,
+                      'postedAt': Timestamp.now(),
+                      'tags': FieldValue.arrayUnion(tagsList)
+                    });
+                  });
+                }
+
                 Navigator.pop(context);
                 Navigator.pop(context);
               }).catchError((e){

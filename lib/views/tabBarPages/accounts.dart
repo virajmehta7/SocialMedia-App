@@ -35,17 +35,19 @@ class _SearchAccountsState extends State<SearchAccounts> {
                   ),
                   suffixIcon: IconButton(
                     onPressed: (){
-                      FocusScope.of(context).unfocus();
-                      FirebaseFirestore.instance
-                          .collection('users')
-                          .where('username', isGreaterThanOrEqualTo: search.text.trim().toLowerCase())
-                          .where('username', isLessThan: search.text.trim().toLowerCase() + 'z')
-                          .get()
-                          .then((value) {
-                        setState(() {
-                          querySnapshot = value;
+                      if(search.text.isNotEmpty){
+                        FocusScope.of(context).unfocus();
+                        FirebaseFirestore.instance
+                            .collection('users')
+                            .where('username', isGreaterThanOrEqualTo: search.text.trim().toLowerCase())
+                            .where('username', isLessThan: search.text.trim().toLowerCase() + 'z')
+                            .get()
+                            .then((value) {
+                          setState(() {
+                            querySnapshot = value;
+                          });
                         });
-                      });
+                      }
                     },
                     icon: Icon(
                       Icons.search,
