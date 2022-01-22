@@ -4,12 +4,12 @@ import 'package:coolname/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'changePassword.dart';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({Key key}) : super(key: key);
+  final snapshot;
+  const EditProfilePage({Key key, this.snapshot}) : super(key: key);
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
@@ -17,62 +17,26 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
 
-  var profileBgPhoto;
   var profilePhoto;
   var email = '';
   var name = '';
   var username = '';
   var bio = '';
-
   var profilePic;
-  var profileBgPic;
-
-  String url1;
-  String url2;
-
+  String url;
   bool loading = false;
-
   TextEditingController nameTextEditingController = TextEditingController();
   TextEditingController bioTextEditingController = TextEditingController();
 
-  cropImage(ImageSource source) async {
-    final tempImage = await ImagePicker().pickImage(source: source, imageQuality: 90);
-    if(tempImage != null) {
-      File croppedFile = await ImageCropper.cropImage(
-          sourcePath: tempImage.path,
-          aspectRatio: CropAspectRatio(ratioX: 4, ratioY: 1.5),
-          compressQuality: 100,
-          compressFormat: ImageCompressFormat.jpg,
-          androidUiSettings: AndroidUiSettings(
-              toolbarTitle: "Edit Photo",
-              toolbarColor: Colors.white,
-              toolbarWidgetColor: Colors.blue,
-              activeControlsWidgetColor: Colors.blue
-          )
-      );
-      setState(() {
-        profileBgPic = croppedFile;
-      });
-    }
-  }
-
   getData() async {
-    DocumentSnapshot ds = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser.uid)
-        .get();
-
-    setState(() {
-      profileBgPhoto = ds.get('profileBgPhoto');
-      profilePhoto = ds.get('profilePhoto');
-      email = ds.get('email');
-      name = ds.get('name');
-      username = ds.get('username');
-      bio = ds.get('bio');
+      profilePhoto = widget.snapshot['profilePhoto'];
+      email = widget.snapshot['email'];
+      name = widget.snapshot['name'];
+      username = widget.snapshot['username'];
+      bio = widget.snapshot['bio'];
 
       nameTextEditingController.text = name;
       bioTextEditingController.text = bio;
-    });
   }
 
   @override
@@ -100,7 +64,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
           onPressed: (){
             Navigator.pop(context);
-            Navigator.pop(context);
           },
         ),
         actions: [
@@ -121,12 +84,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     .child(FirebaseAuth.instance.currentUser.uid+'-${DateTime.now().toString()}');
                 UploadTask task = ref.putFile(profilePic);
                 task.whenComplete(() async {
-                  url1 = await ref.getDownloadURL();
+                  url = await ref.getDownloadURL();
                   await FirebaseFirestore.instance
                       .collection('users')
                       .doc(FirebaseAuth.instance.currentUser.uid)
                       .update({
-                    'profilePhoto' : url1
+                    'profilePhoto' : url
                   });
                 }).catchError((e){
                   setState(() {
@@ -134,35 +97,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   });
                 });
               }
-              if(profileBgPic != null){
-                Reference ref = FirebaseStorage.instance
-                    .ref()
-                    .child('profileBgPhoto')
-                    .child(FirebaseAuth.instance.currentUser.uid)
-                    .child(FirebaseAuth.instance.currentUser.uid+'-${DateTime.now().toString()}');
-                UploadTask task = ref.putFile(profileBgPic);
-                task.whenComplete(() async {
-                  url2 = await ref.getDownloadURL();
-                  await FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(FirebaseAuth.instance.currentUser.uid)
-                      .update({
-                    'profileBgPhoto' : url2
-                  });
-                }).catchError((e){
-                  setState(() {
-                    loading = false;
-                  });
-                });
-              }
-              if(profileBgPic == null && profileBgPhoto == null){
-                await FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(FirebaseAuth.instance.currentUser.uid)
-                    .update({
-                  'profileBgPhoto' : null
-                });
-              }
+
               if(profilePic == null && profilePhoto == null){
                 await FirebaseFirestore.instance
                     .collection('users')
@@ -171,6 +106,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   'profilePhoto' : null
                 });
               }
+
               await FirebaseFirestore.instance
                   .collection('users')
                   .doc(FirebaseAuth.instance.currentUser.uid)
@@ -178,7 +114,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 'bio' : bioTextEditingController.text.trim(),
                 'name' : nameTextEditingController.text.trim(),
               });
-              Navigator.pop(context);
+
               Navigator.pop(context);
             },
           ),
@@ -197,296 +133,148 @@ class _EditProfilePageState extends State<EditProfilePage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              children: [
-                GestureDetector(
-                  onTap: (){
-                    showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        context: context,
-                        builder: (context) {
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.drag_handle_rounded,
-                                size: 30,
-                                color: Colors.white,
+            GestureDetector(
+              onTap: (){
+                showModalBottomSheet(
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (context) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.drag_handle_rounded,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
                               ),
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                padding: EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(30),
-                                    topRight: Radius.circular(30),
-                                  ),
-                                  color: Colors.white,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    GestureDetector(
-                                      behavior: HitTestBehavior.translucent,
-                                      child: Row(
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 22,
-                                            backgroundColor: Colors.grey.shade300,
-                                            child: Icon(
-                                              Icons.photo,
-                                              size: 26,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          SizedBox(width: 15),
-                                          Text("Choose from gallery",
-                                              style: TextStyle(fontSize: 18)
-                                          ),
-                                        ],
-                                      ),
-                                      onTap: () async {
-                                        cropImage(ImageSource.gallery);
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    SizedBox(height: 10),
-                                    GestureDetector(
-                                      behavior: HitTestBehavior.translucent,
-                                      child: Row(
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 22,
-                                            backgroundColor: Colors.grey.shade300,
-                                            child: Icon(
-                                              Icons.camera_alt,
-                                              size: 26,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          SizedBox(width: 15),
-                                          Text("Take photo",
-                                              style: TextStyle(fontSize: 18)
-                                          ),
-                                        ],
-                                      ),
-                                      onTap: () async {
-                                        cropImage(ImageSource.camera);
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    SizedBox(height: 10),
-                                    if(profileBgPic != null || profileBgPhoto != null)
-                                      GestureDetector(
-                                        behavior: HitTestBehavior.translucent,
-                                        child: Row(
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 22,
-                                              backgroundColor: Colors.grey.shade300,
-                                              child: Icon(
-                                                Icons.close,
-                                                size: 26,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            SizedBox(width: 15),
-                                            Text("Remove photo",
-                                                style: TextStyle(fontSize: 18)
-                                            ),
-                                          ],
-                                        ),
-                                        onTap: () async {
-                                          setState(() {
-                                            profileBgPhoto = null;
-                                            profileBgPic = null;
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                    );
-                  },
-                  child: profileBgPic == null ?
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 150,
-                    child: profileBgPhoto != null ?
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 150,
-                      child: Image.network(profileBgPhoto,
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ) :
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 150,
-                      color: mlight,
-                    ),
-                  ) :
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: FileImage(profileBgPic),
-                        fit: BoxFit.fitWidth
-                      )
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: (){
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      builder: (context) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.drag_handle_rounded,
-                              size: 30,
                               color: Colors.white,
                             ),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                  topRight: Radius.circular(30),
-                                ),
-                                color: Colors.white,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.translucent,
-                                    child: Row(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 22,
-                                          backgroundColor: Colors.grey.shade300,
-                                          child: Icon(
-                                            Icons.photo,
-                                            size: 26,
-                                            color: Colors.black,
-                                          ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 22,
+                                        backgroundColor: Colors.grey.shade300,
+                                        child: Icon(
+                                          Icons.photo,
+                                          size: 26,
+                                          color: Colors.black,
                                         ),
-                                        SizedBox(width: 15),
-                                        Text("Choose from gallery",
-                                            style: TextStyle(fontSize: 18)
-                                        ),
-                                      ],
-                                    ),
-                                    onTap: () async {
-                                      var tempImage = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 75);
-                                      setState(() {
-                                        profilePic = File(tempImage.path);
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  SizedBox(height: 10),
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.translucent,
-                                    child: Row(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 22,
-                                          backgroundColor: Colors.grey.shade300,
-                                          child: Icon(
-                                            Icons.camera_alt,
-                                            size: 26,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        SizedBox(width: 15),
-                                        Text("Take photo",
-                                            style: TextStyle(fontSize: 18)
-                                        ),
-                                      ],
-                                    ),
-                                    onTap: () async {
-                                      var tempImage = await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 75);
-                                      setState(() {
-                                        profilePic = File(tempImage.path);
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  SizedBox(height: 10),
-                                  if(profilePic != null || profilePhoto != null)
-                                    GestureDetector(
-                                      behavior: HitTestBehavior.translucent,
-                                      child: Row(
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 22,
-                                            backgroundColor: Colors.grey.shade300,
-                                            child: Icon(
-                                              Icons.close,
-                                              size: 26,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          SizedBox(width: 15),
-                                          Text("Remove photo",
-                                              style: TextStyle(fontSize: 18)
-                                          ),
-                                        ],
                                       ),
-                                      onTap: () async {
-                                        setState(() {
-                                          profilePhoto = null;
-                                          profilePic = null;
-                                        });
-                                        Navigator.pop(context);
-                                      },
+                                      SizedBox(width: 15),
+                                      Text("Choose from gallery",
+                                          style: TextStyle(fontSize: 18)
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: () async {
+                                    var tempImage = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 75);
+                                    setState(() {
+                                      profilePic = File(tempImage.path);
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                SizedBox(height: 10),
+                                GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 22,
+                                        backgroundColor: Colors.grey.shade300,
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          size: 26,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      SizedBox(width: 15),
+                                      Text("Take photo",
+                                          style: TextStyle(fontSize: 18)
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: () async {
+                                    var tempImage = await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 75);
+                                    setState(() {
+                                      profilePic = File(tempImage.path);
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                SizedBox(height: 10),
+                                if(profilePic != null || profilePhoto != null)
+                                  GestureDetector(
+                                    behavior: HitTestBehavior.translucent,
+                                    child: Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 22,
+                                          backgroundColor: Colors.grey.shade300,
+                                          child: Icon(
+                                            Icons.close,
+                                            size: 26,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        SizedBox(width: 15),
+                                        Text("Remove photo",
+                                            style: TextStyle(fontSize: 18)
+                                        ),
+                                      ],
                                     ),
-                                ],
-                              ),
+                                    onTap: () async {
+                                      setState(() {
+                                        profilePhoto = null;
+                                        profilePic = null;
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                              ],
                             ),
-                          ],
-                        );
-                      }
-                    );
-                  },
-                  child: profilePic == null ?
-                  Container(
-                    margin: EdgeInsets.only(top: 80, bottom: 5),
-                    child: Center(
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundColor: Colors.white,
-                        backgroundImage: profilePhoto != null ? NetworkImage(profilePhoto) : AssetImage("assets/images/profile.png"),
-                      ),
-                    ),
-                  ) :
-                  Container(
-                    margin: EdgeInsets.only(top: 80, bottom: 8),
-                    child: Center(
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundColor: Colors.white,
-                        backgroundImage: FileImage(profilePic),
-                      ),
-                    ),
+                          ),
+                        ],
+                      );
+                    }
+                );
+              },
+              child: profilePic == null ?
+              Container(
+                margin: EdgeInsets.only(top: 20, bottom: 5),
+                child: Center(
+                  child: CircleAvatar(
+                    radius: 60,
+                    backgroundColor: Colors.white,
+                    backgroundImage: profilePhoto != null ? NetworkImage(profilePhoto) : AssetImage("assets/images/profile.png"),
                   ),
-                )
-              ],
+                ),
+              ) :
+              Container(
+                margin: EdgeInsets.only(top: 20, bottom: 8),
+                child: Center(
+                  child: CircleAvatar(
+                    radius: 60,
+                    backgroundColor: Colors.white,
+                    backgroundImage: FileImage(profilePic),
+                  ),
+                ),
+              ),
             ),
             Center(
               child: Text("@"+username,

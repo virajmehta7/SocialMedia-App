@@ -1,9 +1,9 @@
 import 'package:coolname/utils/colors.dart';
+import 'package:coolname/views/tabsPage/ChatTabPage.dart';
 import 'package:flutter/material.dart';
 import 'tabsPage/homeTabPage.dart';
 import 'tabsPage/profileTabPage.dart';
 import 'tabsPage/searchTabPage.dart';
-import 'tabsPage/videosTabPage.dart';
 
 class Home extends StatefulWidget {
   const Home({Key key}) : super(key: key);
@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
   final tabs = [
     HomeTabPage(),
     SearchTabPage(),
-    VideosTabPage(),
+    ChatTabPage(),
     ProfileTabPage()
   ];
 
@@ -37,6 +37,9 @@ class _HomeState extends State<Home> {
         type: BottomNavigationBarType.fixed,
         selectedFontSize: 12,
         unselectedFontSize: 12,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        iconSize: 30,
         selectedIconTheme: IconThemeData(color: mlight),
         unselectedIconTheme: IconThemeData(color: Colors.grey.shade600),
         items: [
@@ -49,8 +52,8 @@ class _HomeState extends State<Home> {
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.video_collection),
-            label: 'Watch',
+            icon: Icon(Icons.chat),
+            label: 'Chat',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

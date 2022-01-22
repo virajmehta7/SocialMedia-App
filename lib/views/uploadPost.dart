@@ -51,6 +51,13 @@ class _UploadPostState extends State<UploadPost> {
           },
         ),
         actions: [
+          loading ? IconButton(
+            icon: Icon(
+              Icons.done,
+              color: mlight,
+            ),
+            onPressed: (){},
+          ) :
           IconButton(
             icon: Icon(
               Icons.done,
@@ -77,62 +84,20 @@ class _UploadPostState extends State<UploadPost> {
               UploadTask task = ref.putFile(widget.post);
               task.whenComplete(() async {
                 url = await ref.getDownloadURL();
-                var doc = FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(FirebaseAuth.instance.currentUser.uid)
-                    .collection('posts')
+
+                var doc =  FirebaseFirestore.instance
+                    .collection('AllPosts')
                     .doc();
-                await doc.set({
-                  'username': username,
-                  'photo': url,
-                  'caption': captionTextEditingController.text.trim(),
-                  'doc': doc.id,
-                  'uid': uid,
-                  'postedAt': Timestamp.now(),
-                  'tags': []
-                }).then((value) async => {
-                  if(tagsList.isNotEmpty){
-                    await doc.update({
-                      'tags': FieldValue.arrayUnion(tagsList)
-                    })
-                  }
-                });
-                if(tags.isNotEmpty){
-                  tags.forEach((element) async {
-                    var doc1 = FirebaseFirestore.instance
-                        .collection('AllTags')
-                        .doc(element.substring(1));
-                        doc1.set(
-                        {
-                          'tag' : element.substring(1)
-                        },
-                        SetOptions(merge: true)
-                        );
-                    doc1.collection(element.substring(1))
-                        .doc(doc.id)
-                        .set({
+
+                    doc.set({
                       'username': username,
                       'photo': url,
                       'caption': captionTextEditingController.text.trim(),
-                      'doc': doc.id,
                       'uid': uid,
                       'postedAt': Timestamp.now(),
-                      'tags': FieldValue.arrayUnion(tagsList)
+                      'tags': FieldValue.arrayUnion(tagsList),
+                      'doc': doc.id,
                     });
-                  });
-                }
-                await FirebaseFirestore.instance
-                    .collection('AllPosts')
-                    .doc(doc.id)
-                    .set({
-                  'username': username,
-                  'photo': url,
-                  'caption': captionTextEditingController.text.trim(),
-                  'doc': doc.id,
-                  'uid': uid,
-                  'postedAt': Timestamp.now(),
-                  'tags': FieldValue.arrayUnion(tagsList),
-                });
                 Navigator.pop(context);
                 Navigator.pop(context);
               }).catchError((e){

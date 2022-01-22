@@ -115,7 +115,7 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w300,
-                      color: mid,
+                      color: Colors.black,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -209,22 +209,17 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
                             return null;
                           },
                         ),
-                        SizedBox(height: 20),
                       ],
                     ),
                   ),
+                  SizedBox(height: 20),
                   Container(
                     height: 70,
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.all(10),
                     child: DecoratedBox(
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [
-                              light,
-                              mid,
-                            ]
-                        ),
+                        color: mlight,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: ElevatedButton(
@@ -262,8 +257,7 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
                                     "email" : emailTextEditingController.text,
                                     "name" : usernameTextEditingController.text,
                                     "bio" : "",
-                                    "profilePhoto" : null,
-                                    "profileBgPhoto" : null
+                                    "profilePhoto" : null
                                   };
                                   await FirebaseFirestore.instance.collection("users")
                                       .doc(userInfoMap['uid'])

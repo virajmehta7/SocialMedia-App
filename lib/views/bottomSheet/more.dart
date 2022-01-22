@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../editProfilePage.dart';
 import '../welcome.dart';
 
 class More extends StatefulWidget {
@@ -40,35 +39,7 @@ class _MoreState extends State<More> {
                       ),
                     )
                 ),
-                // GestureDetector(
-                //   behavior: HitTestBehavior.translucent,
-                //   child: Row(
-                //     children: [
-                //       CircleAvatar(
-                //         radius: 22,
-                //         backgroundColor: Colors.grey.shade300,
-                //         child: Icon(
-                //           Icons.arrow_circle_down,
-                //           size: 26,
-                //           color: Colors.black,
-                //         ),
-                //       ),
-                //       SizedBox(width: 15),
-                //       Text('Saved',
-                //         style: TextStyle(
-                //           fontSize: 18,
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                // SizedBox(height: 10),
                 GestureDetector(
-                  onTap: (){
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => EditProfilePage())
-                    );
-                  },
                   behavior: HitTestBehavior.translucent,
                   child: Row(
                     children: [
@@ -76,13 +47,13 @@ class _MoreState extends State<More> {
                         radius: 22,
                         backgroundColor: Colors.grey.shade300,
                         child: Icon(
-                          Icons.edit,
+                          Icons.arrow_circle_down,
                           size: 26,
                           color: Colors.black,
                         ),
                       ),
                       SizedBox(width: 15),
-                      Text('Edit profile',
+                      Text('Saved',
                         style: TextStyle(
                           fontSize: 18,
                         ),

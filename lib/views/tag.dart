@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coolname/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'remoteUserPostDetails.dart';
 
 class Tag extends StatefulWidget {
   final tag;
@@ -131,14 +130,9 @@ class _TagState extends State<Tag> {
                   elevation: 0,
                   child: GestureDetector(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => RemoteUserPostDetail(
-                        photo: snapshot.data.docs[index]['photo'],
-                        time: snapshot.data.docs[index]['postedAt'],
-                        caption: snapshot.data.docs[index]['caption'],
-                        doc: snapshot.data.docs[index]['doc'],
-                        username: snapshot.data.docs[index]['username'],
-                        uid: snapshot.data.docs[index]['uid'],
-                      )));
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => RemoteUserPostDetail(
+                      //   snapshot: snapshot.data.docs[index],
+                      // )));
                     },
                     onLongPress: (){
                       popUp = createPopUp(

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coolname/utils/colors.dart';
 import 'package:coolname/views/bottomSheet/addPost.dart';
 import 'package:coolname/views/bottomSheet/more.dart';
+import 'package:coolname/views/editProfilePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -68,6 +69,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(FirebaseAuth.instance.currentUser.displayName,
           style: TextStyle(
@@ -130,54 +132,35 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Stack(
-                      children: [
-                        snapshot.data['profileBgPhoto'] != null ?
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 150,
-                          child: CachedNetworkImage(
-                            imageUrl: snapshot.data['profileBgPhoto'],
-                            errorWidget: (context, url, error) => Icon(Icons.error_outline),
-                            fit: BoxFit.fitWidth,
-                          ),
-                        ) :
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 150,
-                          color: mlight,
-                        ),
-                        snapshot.data['profilePhoto'] != null ?
-                        Container(
-                          margin: EdgeInsets.only(top: 80, bottom: 5),
-                          child: CachedNetworkImage(
-                            imageUrl: snapshot.data['profilePhoto'],
-                            imageBuilder: (context, imageProvider) =>
-                                Center(
-                                  child: CircleAvatar(
-                                    radius: 60,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
-                                      ),
+                    snapshot.data['profilePhoto'] != null ?
+                    Container(
+                        margin: EdgeInsets.only(top: 20, bottom: 5),
+                        child: CachedNetworkImage(
+                          imageUrl: snapshot.data['profilePhoto'],
+                          imageBuilder: (context, imageProvider) =>
+                              Center(
+                                child: CircleAvatar(
+                                  radius: 60,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
                                     ),
                                   ),
                                 ),
-                            errorWidget: (context, url, error) => Icon(Icons.error_outline),
-                          )
-                        ) :
-                        Container(
-                          margin: EdgeInsets.only(top: 80, bottom: 5),
-                          child: Center(
-                            child: CircleAvatar(
-                              radius: 60,
-                              backgroundColor: Colors.white,
-                              backgroundImage: AssetImage("assets/images/profile.png"),
-                            ),
-                          ),
+                              ),
+                          errorWidget: (context, url, error) => Icon(Icons.error_outline),
                         )
-                      ],
+                    ) :
+                    Container(
+                      margin: EdgeInsets.only(top: 20, bottom: 5),
+                      child: Center(
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.white,
+                          backgroundImage: AssetImage("assets/images/profile.png"),
+                        ),
+                      ),
                     ),
                     snapshot.data['name'] != "" ?
                     Center(
@@ -191,7 +174,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                     Container(),
                     snapshot.data['bio'] != "" ?
                     Padding(
-                      padding: EdgeInsets.fromLTRB(10,8,5,0),
+                      padding: EdgeInsets.fromLTRB(10,8,10,0),
                       child: Text(snapshot.data['bio'],
                         style: TextStyle(
                             fontSize: 18
@@ -199,21 +182,49 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                       ),
                     ) :
                     Container(),
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(10,20,10,8),
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage(snapshot: snapshot.data)));
+                          },
+                          child: Container(
+                            height: MediaQuery.of(context).size.width * 0.1,
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.black)
+                            ),
+                            child: Center(
+                              child: Text('Edit profile',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 );
               },
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(40,10,40,5),
+              padding: EdgeInsets.fromLTRB(30,10,30,5),
               child: Divider(
                 thickness: 1.5,
               ),
             ),
             StreamBuilder(
               stream: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser.uid)
-                  .collection('posts')
+                  .collection('AllPosts')
+                  .where('uid', isEqualTo: FirebaseAuth.instance.currentUser.uid)
                   .orderBy("postedAt", descending: true)
                   .snapshots(),
               builder: (context, snapshot){
@@ -274,8 +285,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                           Navigator.push(
                               context, MaterialPageRoute(
                               builder: (context) => PostDetails(
-                                profilePhoto: profilePhoto,
-                                doc: snapshot.data.docs[index]['doc']
+                                snapshot: snapshot.data.docs[index],
                               ))
                           );
                         },

@@ -2,9 +2,9 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coolname/utils/colors.dart';
+import 'package:coolname/views/postDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'remoteUserPostDetails.dart';
 
 class RemoteUserProfile extends StatefulWidget {
   final username, uid;
@@ -101,75 +101,35 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Stack(
-                      children: [
-                        snapshot.data['profileBgPhoto'] != null ?
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 150,
-                          // decoration: BoxDecoration(
-                          //     image: DecorationImage(
-                          //         image: NetworkImage(snapshot.data['profileBgPhoto']),
-                          //         fit: BoxFit.fitWidth
-                          //     )
-                          // ),
-                          child: CachedNetworkImage(
-                            imageUrl: snapshot.data['profileBgPhoto'],
-                            // progressIndicatorBuilder: (context, url, downloadProgress) => Container(),
-                            errorWidget: (context, url, error) => Icon(Icons.error_outline),
-                            fit: BoxFit.fitWidth,
-                          ),
-                        ) :
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 150,
-                          color: mlight,
-                        ),
-                        snapshot.data['profilePhoto'] != null ?
-                        Container(
-                          margin: EdgeInsets.only(top: 80, bottom: 5),
-                          child: CachedNetworkImage(
-                            imageUrl: snapshot.data['profilePhoto'],
-                            // progressIndicatorBuilder: (context, url, downloadProgress) =>
-                            //     Center(
-                            //       child: CircularProgressIndicator(
-                            //         value: downloadProgress.progress,
-                            //         color: Color(0xffb1325f),
-                            //       ),
-                            //     ),
-                            imageBuilder: (context, imageProvider) =>
-                                Center(
-                                  child: CircleAvatar(
-                                    radius: 60,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
-                                      ),
+                    snapshot.data['profilePhoto'] != null ?
+                    Container(
+                        margin: EdgeInsets.only(top: 20, bottom: 5),
+                        child: CachedNetworkImage(
+                          imageUrl: snapshot.data['profilePhoto'],
+                          imageBuilder: (context, imageProvider) =>
+                              Center(
+                                child: CircleAvatar(
+                                  radius: 60,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
                                     ),
                                   ),
                                 ),
-                            errorWidget: (context, url, error) => Icon(Icons.error_outline),
-                          )
-                          // Center(
-                          //   child: CircleAvatar(
-                          //     radius: 60,
-                          //     backgroundColor: Colors.white,
-                          //     backgroundImage: NetworkImage(snapshot.data['profilePhoto']),
-                          //   ),
-                          // ),
-                        ) :
-                        Container(
-                          margin: EdgeInsets.only(top: 80, bottom: 8),
-                          child: Center(
-                            child: CircleAvatar(
-                              radius: 60,
-                              backgroundColor: Colors.white,
-                              backgroundImage: AssetImage("assets/images/profile.png"),
-                            ),
-                          ),
+                              ),
+                          errorWidget: (context, url, error) => Icon(Icons.error_outline),
                         )
-                      ],
+                    ) :
+                    Container(
+                      margin: EdgeInsets.only(top: 20, bottom: 8),
+                      child: Center(
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.white,
+                          backgroundImage: AssetImage("assets/images/profile.png"),
+                        ),
+                      ),
                     ),
                     snapshot.data['name'] != "" ?
                     Center(
@@ -203,9 +163,8 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
             ),
             StreamBuilder(
               stream: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(widget.uid)
-                  .collection('posts')
+                  .collection('AllPosts')
+                  .where('uid', isEqualTo: widget.uid)
                   .orderBy("postedAt", descending: true)
                   .snapshots(),
               builder: (context, snapshot){
@@ -246,13 +205,8 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
                       elevation: 0,
                       child: GestureDetector(
                         onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => RemoteUserPostDetail(
-                            photo: snapshot.data.docs[index]['photo'],
-                            time: snapshot.data.docs[index]['postedAt'],
-                            caption: snapshot.data.docs[index]['caption'],
-                            doc: snapshot.data.docs[index]['doc'],
-                            username: snapshot.data.docs[index]['username'],
-                            uid: snapshot.data.docs[index]['uid'],
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => PostDetails(
+                            snapshot: snapshot.data.docs[index],
                           )));
                         },
                         onLongPress: (){
@@ -269,12 +223,6 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // ClipRRect(
-                            //   borderRadius: BorderRadius.circular(20),
-                            //   child: Image(
-                            //     image: NetworkImage(snapshot.data.docs[index]['photo']),
-                            //   ),
-                            // ),
                             ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: CachedNetworkImage(

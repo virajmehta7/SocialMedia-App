@@ -1,15 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coolname/utils/colors.dart';
+import 'package:coolname/views/remoteUserProfile.dart';
+import 'package:coolname/views/tabsPage/profileTabPage.dart';
 import 'package:coolname/views/tag.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class PostDetails extends StatefulWidget {
-  final profilePhoto, doc;
-  const PostDetails({Key key, this.profilePhoto, this.doc}) : super(key: key);
+  final snapshot;
+  const PostDetails({Key key, this.snapshot}) : super(key: key);
 
   @override
   _PostDetailsState createState() => _PostDetailsState();
@@ -84,139 +87,95 @@ class _PostDetailsState extends State<PostDetails> {
           child: CircularProgressIndicator(
             color: mlight,
           ),
-        ) :
-        StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('users')
-              .doc(FirebaseAuth.instance.currentUser.uid)
-              .collection('posts')
-              .doc(widget.doc)
-              .snapshots(),
-          builder: (context, snapshot){
-            if(!snapshot.hasData)
-              return Container();
-
-            DateTime dt = snapshot.data['postedAt'].toDate();
-            var date = DateFormat('dd/MM/yyyy').format(dt);
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        ) : Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    widget.profilePhoto != null ?
-                    Padding(
+                Expanded(
+                  child: GestureDetector(
+                    onTap: (){
+                      widget.snapshot['uid'] == FirebaseAuth.instance.currentUser.uid ?
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileTabPage())) :
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RemoteUserProfile(
+                        username: widget.snapshot['username'],
+                        uid: widget.snapshot['uid'],
+                      )));
+                    },
+                    behavior: HitTestBehavior.translucent,
+                    child: Padding(
                       padding: EdgeInsets.fromLTRB(20,15,5,0),
-                      child: CachedNetworkImage(
-                        imageUrl: widget.profilePhoto,
-                        imageBuilder: (context, imageProvider) =>
-                            CircleAvatar(
-                              radius: 20,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
-                                ),
-                              ),
-                            ),
-                        errorWidget: (context, url, error) => Icon(Icons.error_outline),
-                      )
-                    ) :
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20,15,5,0),
-                      child: CircleAvatar(
-                        radius: 20,
-                        backgroundImage: AssetImage("assets/images/profile.png"),
-                        backgroundColor: Colors.white,
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(5,15,5,0),
-                        child: Text(FirebaseAuth.instance.currentUser.displayName,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500
-                          ),
+                      child: Text(widget.snapshot['username'],
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500
                         ),
                       ),
                     ),
-                    IconButton(
-                      padding: EdgeInsets.fromLTRB(5,15,20,0),
-                      onPressed: () async {
-                        setState(() {
-                          loading = true;
-                        });
-                        try{
-                          Navigator.pop(context);
-                          await FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
-                            myTransaction.delete(snapshot.data.reference);
-                          });
-                          if(snapshot.data['tags'].toString().isNotEmpty){
-                            snapshot.data['tags'].forEach((e) async {
-                              await FirebaseFirestore.instance
-                                  .collection('AllTags')
-                                  .doc(e.toString().substring(1))
-                                  .collection(e.toString().substring(1))
-                                  .doc(widget.doc)
-                                  .delete();
-                            });
-                          }
-                          await FirebaseFirestore.instance
-                              .collection('AllPosts')
-                              .doc(widget.doc)
-                              .delete();
-                        } catch(e) {
-                          setState(() {
-                            loading = false;
-                          });
-                        }
-                      },
-                      icon: Icon(Icons.delete),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                  child: Divider(
-                    thickness: 0.8,
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(20,1,20,8),
-                  child: CachedNetworkImage(
-                    imageUrl: snapshot.data['photo'],
-                    progressIndicatorBuilder: (context, url, downloadProgress) =>
-                        CircularProgressIndicator(
-                          value: downloadProgress.progress,
-                          color: mlight,
-                        ),
-                    errorWidget: (context, url, error) => Icon(Icons.error_outline),
-                  )
-                ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  padding: EdgeInsets.fromLTRB(15,1,20,5),
-                  child: Text(date,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                ),
-                snapshot.data['caption'].toString().isNotEmpty ?
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20,0,20,30),
-                  child: convertHashtag(snapshot.data['caption'])
-                ) :
-                Container(),
+                widget.snapshot['uid'] == FirebaseAuth.instance.currentUser.uid ?
+                IconButton(
+                  padding: EdgeInsets.fromLTRB(5,15,20,0),
+                  onPressed: () async {
+                    setState(() {
+                      loading = true;
+                    });
+                    try{
+                      Navigator.pop(context);
+                      await FirebaseFirestore.instance
+                          .collection('AllPosts')
+                          .doc(widget.snapshot['doc'])
+                          .delete();
+                    } catch(e) {
+                      setState(() {
+                        loading = false;
+                      });
+                    }
+                  },
+                  icon: Icon(Icons.delete),
+                ) : Container(),
               ],
-            );
-          },
-        )
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              child: Divider(
+                thickness: 0.8,
+              ),
+            ),
+            Container(
+                margin: EdgeInsets.fromLTRB(20,1,20,8),
+                child: CachedNetworkImage(
+                  imageUrl: widget.snapshot['photo'],
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                        value: downloadProgress.progress,
+                        color: mlight,
+                      ),
+                  errorWidget: (context, url, error) => Icon(Icons.error_outline),
+                )
+            ),
+            Container(
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.fromLTRB(15,1,20,5),
+              child: Text(DateFormat('dd/MM/yyyy').format(widget.snapshot['postedAt'].toDate()),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ),
+            widget.snapshot['caption'].toString().isNotEmpty ?
+            Padding(
+                padding: EdgeInsets.fromLTRB(20,0,20,30),
+                child: convertHashtag(widget.snapshot['caption'])
+            ) :
+            Container(),
+          ],
+        ),
       ),
     );
   }

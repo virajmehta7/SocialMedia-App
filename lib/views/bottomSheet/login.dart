@@ -110,7 +110,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w300,
-                      color: mid,
+                      color: Colors.black,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -186,26 +186,21 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
                               );
                             },
                             child: Text('Forgot password?',
-                                style: TextStyle(fontWeight: FontWeight.w300)
+                                style: TextStyle(color: Colors.black)
                             ),
                           ),
                         ),
-                        SizedBox(height: 20),
                       ],
                     ),
                   ),
+                  SizedBox(height: 20),
                   Container(
                     height: 70,
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.all(10),
                     child: DecoratedBox(
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [
-                              light,
-                              mid,
-                            ]
-                        ),
+                        color: mlight,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: ElevatedButton(
