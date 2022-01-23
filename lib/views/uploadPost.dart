@@ -21,7 +21,6 @@ class _UploadPostState extends State<UploadPost> {
   String url;
   String username = FirebaseAuth.instance.currentUser.displayName;
   String uid = FirebaseAuth.instance.currentUser.uid;
-  // RegExp exp = RegExp(r"\B#\w\w+");
   bool loading = false;
 
   addTag(String text) {
@@ -84,7 +83,7 @@ class _UploadPostState extends State<UploadPost> {
               task.whenComplete(() async {
                 url = await ref.getDownloadURL();
 
-                var doc =  FirebaseFirestore.instance
+                var doc = FirebaseFirestore.instance
                     .collection('AllPosts')
                     .doc();
 
@@ -96,13 +95,8 @@ class _UploadPostState extends State<UploadPost> {
                       'postedAt': Timestamp.now(),
                       'tags': FieldValue.arrayUnion(tagsList),
                       'doc': doc.id,
-                    }).then((value) async => {
-                      if(tagsList.isNotEmpty){
-                        await doc.update({
-                          'tags': FieldValue.arrayUnion(tagsList)
-                        })
-                      }
                     });
+
                 if(tags.isNotEmpty){
                   tags.forEach((element) async {
                     var doc1 = FirebaseFirestore.instance

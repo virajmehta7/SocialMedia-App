@@ -35,28 +35,60 @@ class _HomeState extends State<Home> {
         currentIndex: selectedIndex,
         backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        iconSize: 30,
-        selectedIconTheme: IconThemeData(color: mlight),
-        unselectedIconTheme: IconThemeData(color: Colors.grey.shade600),
+        elevation: 0,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Image.asset(
+              'assets/images/home_outlined.png',
+              color: Colors.grey.shade600,
+              height: 26,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/home_filled.png',
+              color: mlight,
+              height: 26,
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Image.asset(
+              'assets/images/search_outlined.png',
+              color: Colors.grey.shade600,
+              height: 26,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/search_filled.png',
+              color: mlight,
+              height: 26,
+            ),
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
+            icon: Image.asset(
+              'assets/images/chat_outlined.png',
+              color: Colors.grey.shade600,
+              height: 26,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/chat_filled.png',
+              color: mlight,
+              height: 26,
+            ),
             label: 'Chat',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Image.asset(
+              'assets/images/person_outlined.png',
+              color: Colors.grey.shade600,
+              height: 26,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/person_filled.png',
+              color: mlight,
+              height: 26,
+            ),
             label: 'Profile',
           ),
         ],

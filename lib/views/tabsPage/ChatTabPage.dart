@@ -10,6 +10,19 @@ class ChatTabPage extends StatefulWidget {
 class _ChatTabPageState extends State<ChatTabPage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text('Chats',
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 22
+          ),
+        ),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),
+    );
   }
 }

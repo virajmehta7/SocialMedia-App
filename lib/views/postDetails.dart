@@ -5,7 +5,6 @@ import 'package:coolname/views/remoteUserProfile.dart';
 import 'package:coolname/views/tabsPage/profileTabPage.dart';
 import 'package:coolname/views/tag.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

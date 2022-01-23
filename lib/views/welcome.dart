@@ -55,7 +55,7 @@ class _WelcomeState extends State<Welcome> {
                 ),
               ),
               Container(
-                height: 76,
+                height: MediaQuery.of(context).size.height * 0.1,
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.all(10),
                 child: ElevatedButton(
@@ -82,7 +82,7 @@ class _WelcomeState extends State<Welcome> {
                 ),
               ),
               Container(
-                height: 76,
+                height: MediaQuery.of(context).size.height * 0.1,
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.all(10),
                 child: ElevatedButton(

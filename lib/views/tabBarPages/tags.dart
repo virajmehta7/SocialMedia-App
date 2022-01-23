@@ -18,6 +18,7 @@ class _SearchTagsState extends State<SearchTags> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -93,7 +94,7 @@ class _SearchTagsState extends State<SearchTags> {
                       children: [
                         CircleAvatar(
                           radius: 26,
-                          backgroundColor: Colors.white,
+                          backgroundColor: Colors.grey.shade50,
                           child: Text('#',
                             style: TextStyle(
                               color: mlight,
