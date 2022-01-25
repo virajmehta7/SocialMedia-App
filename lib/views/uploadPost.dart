@@ -95,6 +95,7 @@ class _UploadPostState extends State<UploadPost> {
                       'postedAt': Timestamp.now(),
                       'tags': FieldValue.arrayUnion(tagsList),
                       'doc': doc.id,
+                      'saved': []
                     });
 
                 if(tags.isNotEmpty){
@@ -117,7 +118,8 @@ class _UploadPostState extends State<UploadPost> {
                       'doc': doc.id,
                       'uid': uid,
                       'postedAt': Timestamp.now(),
-                      'tags': FieldValue.arrayUnion(tagsList)
+                      'tags': FieldValue.arrayUnion(tagsList),
+                      'saved': []
                     });
                   });
                 }

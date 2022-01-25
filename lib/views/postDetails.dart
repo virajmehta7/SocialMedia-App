@@ -20,6 +20,8 @@ class PostDetails extends StatefulWidget {
 class _PostDetailsState extends State<PostDetails> {
 
   bool loading = false;
+  bool saved = false;
+  var uid = [FirebaseAuth.instance.currentUser.uid];
 
   RichText convertHashtag(String text) {
     List<String> split = text.split(" ");
@@ -61,6 +63,20 @@ class _PostDetailsState extends State<PostDetails> {
           ),
       ),
     );
+  }
+
+  getData(){
+    if(widget.snapshot['saved'].contains(FirebaseAuth.instance.currentUser.uid)){
+      setState(() {
+        saved = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
   }
 
   @override
@@ -147,7 +163,37 @@ class _PostDetailsState extends State<PostDetails> {
                     }
                   },
                   icon: Icon(Icons.delete),
-                ) : Container(),
+                ) :
+                saved ? IconButton(
+                  padding: EdgeInsets.fromLTRB(5,15,20,0),
+                  onPressed: () async {
+                    setState(() {
+                      saved = false;
+                    });
+                    await FirebaseFirestore.instance
+                        .collection('AllPosts')
+                        .doc(widget.snapshot['doc'])
+                        .update({
+                      'saved': FieldValue.arrayRemove(uid)
+                    });
+                  },
+                  icon: Icon(Icons.download_done_outlined),
+                ) :
+                IconButton(
+                  padding: EdgeInsets.fromLTRB(5,15,20,0),
+                  onPressed: () async {
+                    setState(() {
+                      saved = true;
+                    });
+                    await FirebaseFirestore.instance
+                        .collection('AllPosts')
+                        .doc(widget.snapshot['doc'])
+                        .update({
+                      'saved': FieldValue.arrayUnion(uid)
+                    });
+                  },
+                  icon: Icon(Icons.download),
+                )
               ],
             ),
             Padding(

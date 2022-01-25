@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../saved.dart';
 import '../welcome.dart';
 
 class More extends StatefulWidget {
@@ -40,6 +41,11 @@ class _MoreState extends State<More> {
                     )
                 ),
                 GestureDetector(
+                  onTap: (){
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => Saved())
+                    );
+                  },
                   behavior: HitTestBehavior.translucent,
                   child: Row(
                     children: [
@@ -47,7 +53,7 @@ class _MoreState extends State<More> {
                         radius: 22,
                         backgroundColor: Colors.grey.shade300,
                         child: Icon(
-                          Icons.arrow_circle_down,
+                          Icons.download,
                           size: 26,
                           color: Colors.black,
                         ),
