@@ -10,4 +10,12 @@ class DatabaseMethods{
     return result.docs.isEmpty;
   }
 
+  roomIdCheck(roomId) async {
+    final result = await FirebaseFirestore.instance
+        .collection("messages")
+        .where('roomId', isEqualTo: roomId)
+        .get();
+    return result.docs.isNotEmpty;
+  }
+
 }

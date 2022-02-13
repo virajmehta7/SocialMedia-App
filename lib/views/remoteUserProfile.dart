@@ -1,9 +1,11 @@
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coolname/services/database.dart';
 import 'package:coolname/utils/colors.dart';
 import 'package:coolname/views/chat.dart';
 import 'package:coolname/views/postDetails.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -62,6 +64,7 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
   }
 
   OverlayEntry popUp;
+  DatabaseMethods databaseMethods = new DatabaseMethods();
 
   @override
   Widget build(BuildContext context) {
@@ -151,16 +154,54 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
                         padding: EdgeInsets.fromLTRB(10,20,10,8),
                         child: GestureDetector(
                           behavior: HitTestBehavior.translucent,
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Chat(snapshot: snapshot.data,)));
+                          onTap: () async {
+
+                            final a = await databaseMethods
+                                .roomIdCheck(FirebaseAuth.instance.currentUser.uid+'-'+snapshot.data['uid']);
+
+                            final b = await databaseMethods
+                                .roomIdCheck(snapshot.data['uid']+'-'+FirebaseAuth.instance.currentUser.uid);
+
+                            if(a==true && b==false){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Chat(
+                                snapshot: snapshot.data,
+                                roomId: FirebaseAuth.instance.currentUser.uid+'-'+snapshot.data['uid'],
+                              )));
+                            }
+
+                            else if(a==false && b==true){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Chat(
+                                snapshot: snapshot.data,
+                                roomId: snapshot.data['uid']+'-'+FirebaseAuth.instance.currentUser.uid,
+                              )));
+                            }
+
+                            else{
+                              await FirebaseFirestore.instance
+                                  .collection('messages')
+                                  .doc(FirebaseAuth.instance.currentUser.uid+'-'+snapshot.data['uid'])
+                                  .set({
+                                'roomId': FirebaseAuth.instance.currentUser.uid+'-'+snapshot.data['uid'],
+                                'users': [FirebaseAuth.instance.currentUser.uid, snapshot.data['uid']],
+                                if(a==false && b==false)
+                                  'messages': []
+                              }, SetOptions(merge: true))
+                                  .then((value) => {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Chat(
+                                  snapshot: snapshot.data,
+                                  roomId: FirebaseAuth.instance.currentUser.uid+'-'+snapshot.data['uid'],
+                                ))),
+                              });
+                            }
+
                           },
                           child: Container(
                             height: MediaQuery.of(context).size.width * 0.1,
                             width: MediaQuery.of(context).size.width * 0.8,
                             decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(color: Colors.black)
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.grey)
                             ),
                             child: Center(
                               child: Text('Message',
