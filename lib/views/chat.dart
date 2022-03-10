@@ -31,7 +31,7 @@ class _ChatState extends State<Chat> {
     });
   }
 
-  sendMessages(String msg, String by, String time) async {
+  sendMessages(String msg, String by, DateTime time) async {
     if(msg.trim().isNotEmpty){
       message.clear();
       await FirebaseFirestore.instance.collection('messages').doc(widget.roomId).update({
@@ -197,7 +197,7 @@ class _ChatState extends State<Chat> {
                         keyboardType: TextInputType.multiline,
                         controller: message,
                         onSubmitted: (_){
-                          sendMessages(message.text.trim(), FirebaseAuth.instance.currentUser.uid, DateTime.now().toString());
+                          sendMessages(message.text.trim(), FirebaseAuth.instance.currentUser.uid, DateTime.now());
                         },
                         decoration: InputDecoration(
                           border: InputBorder.none,
@@ -210,7 +210,7 @@ class _ChatState extends State<Chat> {
                       builder: (context, value, child){
                         return value.text.trim().isNotEmpty ? InkWell(
                           onTap: (){
-                            sendMessages(message.text.trim(), FirebaseAuth.instance.currentUser.uid, DateTime.now().toString());
+                            sendMessages(message.text.trim(), FirebaseAuth.instance.currentUser.uid, DateTime.now());
                           },
                           child: Text('Send',
                             style: TextStyle(

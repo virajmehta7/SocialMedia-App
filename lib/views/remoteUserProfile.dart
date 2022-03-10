@@ -183,6 +183,7 @@ class _RemoteUserProfileState extends State<RemoteUserProfile> {
                                   .set({
                                 'roomId': FirebaseAuth.instance.currentUser.uid+'-'+snapshot.data['uid'],
                                 'users': [FirebaseAuth.instance.currentUser.uid, snapshot.data['uid']],
+                                'username': FirebaseAuth.instance.currentUser.displayName+'-'+snapshot.data['username'],
                                 if(a==false && b==false)
                                   'messages': []
                               }, SetOptions(merge: true))
